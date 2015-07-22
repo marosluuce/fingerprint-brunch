@@ -33,11 +33,15 @@ class Fingerprint
     jsFileToHash = @config.files?.javascripts ?.joinTo ? {}
     cssFileToHash = @config.files?.stylesheets ?.joinTo ? {}
 
-  onCompile: ->
+  teardown: ->
     map = {}
     mappingExt = path.extname(options.manifest);
 
-    # Try to rename files to generate
+    # Get Hash
+    hash = getHash source, 'utf8'
+    hash = hash.substr 0, options.hashLength
+
+    
 
     # write manifest
     if options.manifest
