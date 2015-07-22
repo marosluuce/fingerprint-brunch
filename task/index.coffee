@@ -33,7 +33,10 @@ class Fingerprint
     jsFileToHash = @config.files?.javascripts ?.joinTo ? {}
     cssFileToHash = @config.files?.stylesheets ?.joinTo ? {}
 
-  teardown: ->
+  optimize: (params, callback) ->
+
+    console.log params
+
     map = {}
     mappingExt = path.extname(options.manifest);
 
@@ -41,7 +44,7 @@ class Fingerprint
     hash = getHash source, 'utf8'
     hash = hash.substr 0, options.hashLength
 
-    
+
 
     # write manifest
     if options.manifest
