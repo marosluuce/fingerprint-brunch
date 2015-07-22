@@ -1,12 +1,12 @@
 "use strict"
 
-crypto  = require 'crypto'
 fs      = require 'fs'
+pathlib = require 'path'
 getHash = require('../lib/hash');
 
-warn = (message) -> BrunchHashPlugin.logger.warn "brunch-hash WARNING: #{message}"
+warn = (message) -> Fingerprint.logger.warn "brunch-hash WARNING: #{message}"
 
-class BrunchHashPlugin
+class Fingerprint
   brunchPlugin: true
 
 
@@ -26,36 +26,31 @@ class BrunchHashPlugin
     }
 
     # Merge config
-    cfg = @config.plugins?.digest ? {}
+    cfg = @config.plugins?.fingerprint ? {}
     @options[k] = cfg[k] for k of cfg
 
+    # Get files
+    jsFileToHash = @config.files?.javascripts ?.joinTo ? {}
+    cssFileToHash = @config.files?.stylesheets ?.joinTo ? {}
 
-  onCompile: (generatedFiles) ->
-    BrunchHashPlugin.logger.log generatedFiles
-	  #@_writeManifestFile(replacementDigestMap)
-#
-#    #mappingExt = path.extname(options.mapping);
-#
-#    #if options.mapping
-#    #  output = ''
-#
-#    #  if mappingExt === '.php'
-#    #    output = "<?php return json_decode('" + JSON.stringify map + "'); ?>"
-#    #  else
-    #    output = JSON.stringify map, null, "  "
+  onCompile: ->
+    map = {}
+    mappingExt = path.extname(options.manifest);
 
+    # Try to rename files to generate
 
-  _writeManifestFile: (renameMap) ->
-    if not @options.manifest
-      return
-    manifest = {}
-    for file, hash of renameMap when hash
-      relative = pathlib.relative(@publicFolder, file)
-      rename = @_addHashToPath relative, hash
-      manifest[relative] = rename
-    fs.writeFileSync(@options.manifest, JSON.stringify(manifest, null, 4))
+    # write manifest
+    if options.manifest
+      output = ''
 
+      if mappingExt === '.php'
+        output = "<?php return json_decode('" + JSON.stringify map + "'); ?>"
+      else
+        output = JSON.stringify map, null, "  "
 
-BrunchHashPlugin.logger = console
+      fs.writeFileSync(@options.manifest, output)
+  
+
+Fingerprint.logger = console
 
 module.exports = BrunchHashPlugin
