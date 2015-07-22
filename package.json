@@ -1,11 +1,11 @@
 {
-  "name": "brunch-hash",
+  "name": "fingerprint-brunch",
   "version": "1.0.2",
   "description": "A Brunch plugin for cache busting assets",
   "author": "David Lepaux <d.lepaux@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "git@github.com:dlepaux/brunch-hash.git"
+    "url": "git@github.com:dlepaux/fingerprint-brunch.git"
   },
   "main": "./task/index",
   "devDependencies": {
