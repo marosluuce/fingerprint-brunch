@@ -1,0 +1,16 @@
+{
+  "name": "brunch-hash",
+  "version": "1.0.0",
+  "description": "A Brunch plugin for cache busting assets",
+  "author": "David Lepaux <d.lepaux@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dlepaux/brunch-hash.git"
+  },
+  "main": "./src/index",
+  "devDependencies": {
+    "coffee-script": "~1.9.0",
+    "lodash": "~3.10.0"
+  },
+  "licence": "MIT"
+}
