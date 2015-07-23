@@ -34,37 +34,40 @@ class Fingerprint
     cfg = @config.plugins?.fingerprint ? {}
     @options[k] = cfg[k] for k of cfg
 
-    @map = {}
 
   onCompile: (generatedFiles) ->
+    map = {}
     mappingExt = path.extname(@options.manifest);
 
     # Open files
     for file in generatedFiles
-      #if file.path.indexOf @options.pattern != -1
-        fs.readFile file.path, 'utf8', (err,data) ->
-          # Generate hash
-          hash = getHash data, 'utf8'
+      @_makeCoffee(file, map)
 
-          # Generate the new path (with new filename)
-          dir = path.dirname(file.path)
-          ext = path.extname(file.path)
-          base = path.basename(file.path, ext)
-          newName = "#{base}-#{hash}#{ext}"
-          newFileName = path.join(dir, newName)
+    @_writeManifest(map)
+    
 
-          # Add link to map
-          # map.push({ JSON.stringify file.path : JSON.stringify newFileName })
-          @map[file.path] = newFileName
-          # console.log map
+  _makeCoffee: (file, digestMap) ->
+    fs.readFile file.path, 'utf8', (err,data) ->
+      # Generate hash
+      hash = getHash data, 'utf8'
 
-          # Create new file, with hash
-          fs.writeFileSync(newFileName, data)
+      # Generate the new path (with new filename)
+      dir = path.dirname(file.path)
+      ext = path.extname(file.path)
+      base = path.basename(file.path, ext)
+      newName = "#{base}-#{hash}#{ext}"
+      newFileName = path.join(dir, newName)
 
-    console.log @map
-    output = JSON.stringify @map, null, "  "
+      # Add link to map
+      digestMap[file.path] = newFileName
+
+      # Create new file, with hash
+      fs.writeFileSync(newFileName, data)
+
+
+  _writeManifest: (digestMap) ->
+    output = JSON.stringify digestMap, null, "  "
     fs.writeFileSync(@options.manifest, output)
-
 
 Fingerprint.logger = console
 
