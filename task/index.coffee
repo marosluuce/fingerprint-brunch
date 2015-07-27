@@ -39,33 +39,35 @@ class Fingerprint
     map = {}
     mappingExt = path.extname(@options.manifest);
 
+    @_makeCoffee(generatedFiles, map, _writeManifest)
+
+
+  _makeCoffee: (file, digestMap, callback) ->
     # Open files
     for file in generatedFiles
-      @_makeCoffee(file, map)
+      fs.readFile file.path, 'utf8', (err,data) ->
+        # Generate hash
+        hash = getHash data, 'utf8'
 
-    @_writeManifest(map)
-    
+        # Generate the new path (with new filename)
+        dir = path.dirname(file.path)
+        ext = path.extname(file.path)
+        base = path.basename(file.path, ext)
+        newName = "#{base}-#{hash}#{ext}"
+        newFileName = path.join(dir, newName)
 
-  _makeCoffee: (file, digestMap) ->
-    fs.readFile file.path, 'utf8', (err,data) ->
-      # Generate hash
-      hash = getHash data, 'utf8'
+        # Add link to map
+        digestMap[file.path] = newFileName
 
-      # Generate the new path (with new filename)
-      dir = path.dirname(file.path)
-      ext = path.extname(file.path)
-      base = path.basename(file.path, ext)
-      newName = "#{base}-#{hash}#{ext}"
-      newFileName = path.join(dir, newName)
+        # Create new file, with hash
+        fs.writeFileSync(newFileName, data)
 
-      # Add link to map
-      digestMap[file.path] = newFileName
-
-      # Create new file, with hash
-      fs.writeFileSync(newFileName, data)
+    @callback(digestMap)
+      
 
 
   _writeManifest: (digestMap) ->
+    console.log digestMap
     output = JSON.stringify digestMap, null, "  "
     fs.writeFileSync(@options.manifest, output)
 
