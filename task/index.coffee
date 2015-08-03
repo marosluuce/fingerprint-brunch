@@ -2,8 +2,7 @@
 
 fs       = require 'fs'
 path     = require 'path'
-getHash  = require '../lib/hash'
-
+crypto     = require 'crypto'
 
 warn = (message) -> Fingerprint.logger.warn "fingerprint-brunch WARNING: #{message}"
 
@@ -16,8 +15,6 @@ class Fingerprint
     @options = {
       # Mapping file so your server can serve the right files
       manifest: './assets.json'
-      # Pattern for identify all files to change
-      pattern: '_fingerprint_'
       # The base Path you want to remove from the `key` string in the mapping file
       srcBasePath: 'exemple/'
       # The base Path you want to remove from the `value` string in the mapping file
@@ -27,50 +24,47 @@ class Fingerprint
       # How many digits of the SHA1.
       hashLength: 8
       # Files you want to hash
-      targets: []
+      targets: '*'
     }
 
     # Merge config
     cfg = @config.plugins?.fingerprint ? {}
     @options[k] = cfg[k] for k of cfg
 
-    # Declare map
-    @map = {}
-
 
   onCompile: (generatedFiles) ->
-    @_makeCoffee(generatedFiles, _writeManifest)
+    map = {}
 
-
-  _makeCoffee: (file, callback) ->
     # Open files
     for file in generatedFiles
-      fs.readFile file.path, 'utf8', (err,data) ->
-        # Generate hash
-        hash = getHash data, 'utf8'
+      #  # Generate the new path (with new filename)
+      dir = path.dirname(file.path)
+      ext = path.extname(file.path)
+      base = path.basename(file.path, ext)
 
-        # Generate the new path (with new filename)
-        dir = path.dirname(file.path)
-        ext = path.extname(file.path)
-        base = path.basename(file.path, ext)
+      if @options.targets == '*' or (base + ext) in @options.targets
+        hash = null
+        # Generate hash
+        data = fs.readFileSync file.path
+        shasum = crypto.createHash 'sha1'
+        shasum.update(data)
+        hash = shasum.digest('hex')[0..@options.hashLength-1]
+
+        # Make new good path
         newName = "#{base}-#{hash}#{ext}"
         newFileName = path.join(dir, newName)
 
+        # Rename file, with hash
+        fs.renameSync(file.path, newFileName)
+        
         # Add link to map
-        @map[file.path] = newFileName
+        keyPath = file.path.replace @options.srcBasePath, ""
+        realPath = newFileName.replace @options.destBasePath, ""
+        map[keyPath] = realPath
 
-        # Create new file, with hash
-        fs.writeFileSync(newFileName, data)
-        console.log(new Date);
-
-    @callback(@map)
-      
-
-  _writeManifest: (@map) ->
-    console.log @map
-    output = JSON.stringify @map, null, "  "
+    output = JSON.stringify map, null, "  "
     fs.writeFileSync(@options.manifest, output)
-    console.log(new Date);
+    
 
 Fingerprint.logger = console
 
