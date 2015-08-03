@@ -1,7 +1,7 @@
 fingerprint-brunch [![NPM Version][npm-badge]][npm]
 =============
 
-A [Brunch][] plugin that rename assets with a SHA for fingerprinted it.
+A [Brunch][] plugin witch rename assets with a SHA for fingerprinted it.
 
 Installation
 -------
