@@ -34,15 +34,15 @@ class Fingerprint
     cfg = @config.plugins?.fingerprint ? {}
     @options[k] = cfg[k] for k of cfg
 
+    # Declare map
+    @map = {}
+
 
   onCompile: (generatedFiles) ->
-    map = {}
-    mappingExt = path.extname(@options.manifest);
-
-    @_makeCoffee(generatedFiles, map, _writeManifest)
+    @_makeCoffee(generatedFiles, _writeManifest)
 
 
-  _makeCoffee: (file, digestMap, callback) ->
+  _makeCoffee: (file, callback) ->
     # Open files
     for file in generatedFiles
       fs.readFile file.path, 'utf8', (err,data) ->
@@ -57,19 +57,20 @@ class Fingerprint
         newFileName = path.join(dir, newName)
 
         # Add link to map
-        digestMap[file.path] = newFileName
+        @map[file.path] = newFileName
 
         # Create new file, with hash
         fs.writeFileSync(newFileName, data)
+        console.log(new Date);
 
-    @callback(digestMap)
+    @callback(@map)
       
 
-
-  _writeManifest: (digestMap) ->
-    console.log digestMap
-    output = JSON.stringify digestMap, null, "  "
+  _writeManifest: (@map) ->
+    console.log @map
+    output = JSON.stringify @map, null, "  "
     fs.writeFileSync(@options.manifest, output)
+    console.log(new Date);
 
 Fingerprint.logger = console
 
