@@ -2,7 +2,7 @@
 
 fs       = require 'fs'
 path     = require 'path'
-crypto     = require 'crypto'
+crypto   = require 'crypto'
 
 warn = (message) -> Fingerprint.logger.warn "fingerprint-brunch WARNING: #{message}"
 
@@ -19,11 +19,9 @@ class Fingerprint
       srcBasePath: 'exemple/'
       # The base Path you want to remove from the `value` string in the mapping file
       destBasePath: 'out/'
-      # Set to true if you don't want to keep folder structure in the `key` value in the mapping file
-      flatten: false
       # How many digits of the SHA1.
       hashLength: 8
-      # Files you want to hash
+      # Files you want to hash, default is all else put an array of files like ['app.js', 'vendor.js', ...]
       targets: '*'
     }
 
