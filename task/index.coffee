@@ -21,6 +21,8 @@ class Fingerprint
       destBasePath: 'out/'
       # How many digits of the SHA1.
       hashLength: 8
+      # Remove old fingerprinted files
+      clearOldFingerPrintedFiles: false
       # Files you want to hash, default is all else put an array of files like ['app.js', 'vendor.js', ...]
       targets: '*'
     }
@@ -41,7 +43,9 @@ class Fingerprint
       base = path.basename(file.path, ext)
 
       if @options.targets == '*' or (base + ext) in @options.targets
-        hash = null
+        # Search and destory old files if option is enable
+        
+
         # Generate hash
         data = fs.readFileSync file.path
         shasum = crypto.createHash 'sha1'
@@ -60,7 +64,12 @@ class Fingerprint
         realPath = newFileName.replace @options.destBasePath, ""
         map[keyPath] = realPath
 
-    output = JSON.stringify map, null, "  "
+    # Merge array to keep not watched files
+    manifest = fs.readFileSync @options.manifest, 'utf8'
+    manifest = JSON.parse manifest
+    manifest[k] = map[k] for k of map
+    output = JSON.stringify manifest, null, "  "
+
     fs.writeFileSync(@options.manifest, output)
     
 
