@@ -22,7 +22,7 @@ class Fingerprint
       # How many digits of the SHA1.
       hashLength: 8
       # Remove old fingerprinted files
-      clearOldFingerPrintedFiles: false
+      autoClearOldFiles: false
       # Files you want to hash, default is all else put an array of files like ['app.js', 'vendor.js', ...]
       targets: '*'
     }
@@ -42,10 +42,15 @@ class Fingerprint
       ext = path.extname(file.path)
       base = path.basename(file.path, ext)
 
-      if @options.targets == '*' or (base + ext) in @options.targets
+      if @options.autoClearOldFiles
         # Search and destory old files if option is enable
-        
+        pattern = new RegExp(base + '\\-\\w+\\' + ext + '$');
+        files = fs.readdirSync dir
+        for oldFile in files
+          filePath = path.normalize(dir + '/' + oldFile)
+          if pattern.test oldFile then fs.unlinkSync filePath
 
+      if @options.targets == '*' or (base + ext) in @options.targets
         # Generate hash
         data = fs.readFileSync file.path
         shasum = crypto.createHash 'sha1'

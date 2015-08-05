@@ -28,6 +28,8 @@ exports.config =
       destBasePath: 'out/'
       # How many digits of the SHA1.
       hashLength: 8
+      # Remove old fingerprinted files
+      autoClearOldFiles: false
       # Files you want to hash, default is all else put an array of files like ['app.js', 'vendor.js', ...]
       targets: '*'
 ```
