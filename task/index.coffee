@@ -70,10 +70,13 @@ class Fingerprint
         map[keyPath] = realPath
 
     # Merge array to keep not watched files
-    manifest = fs.readFileSync @options.manifest, 'utf8'
-    manifest = JSON.parse manifest
-    manifest[k] = map[k] for k of map
-    output = JSON.stringify manifest, null, "  "
+    if fs.existsSync @options.manifest
+      manifest = fs.readFileSync @options.manifest, 'utf8'
+      manifest = JSON.parse manifest
+      manifest[k] = map[k] for k of map
+      output = JSON.stringify manifest, null, "  "
+    else
+      output = JSON.stringify map, null, "  "
 
     fs.writeFileSync(@options.manifest, output)
     
