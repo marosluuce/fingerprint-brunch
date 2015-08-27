@@ -9,7 +9,7 @@ Installation
 `npm install fingerprint-brunch --save-dev`
 
 
-Options
+Configuration
 -------
 _Optional_ You can override fingerprint-brunch's default options by updating your `brunch-config.coffee` with overrides.
 
@@ -33,6 +33,26 @@ exports.config =
       # Files you want to hash, default is all else put an array of files like ['app.js', 'vendor.js', ...]
       targets: '*'
 ```
+
+
+Usage
+-------
+The manifest generated seem to this.
+```json
+{
+  "css/master.css": "css/master-364b42a1.css",
+  "js/master.js": "js/master-cb60c02b.js"
+}
+```
+
+With `srcBasePath` and `destBasePath` you can remove some part of your path files.
+
+Like if `srcBasePath` equal to '../../public/theme/', `../../public/theme/css/master.css` begin `css/master.css`.
+
+In your code your can make a little script to read this `assets.json` and next get the real path with the key `js/master.js`.
+
+If your have any questions or suggestions, ask me !
+
 
 License
 -------
