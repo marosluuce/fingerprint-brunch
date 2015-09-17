@@ -8,7 +8,6 @@ warn = (message) -> Fingerprint.logger.warn "fingerprint-brunch WARNING: #{messa
 
 unixify = (pathFile) -> pathFile.split('\\').join('/')
 
-
 class Fingerprint
   brunchPlugin: true
 
@@ -28,6 +27,10 @@ class Fingerprint
       autoClearOldFiles: false
       # Files you want to hash, default is all else put an array of files like ['app.js', 'vendor.js', ...]
       targets: '*'
+      # Environment to make hash on files
+      environments: ['production']
+      # Force fingerprint-brunch to run in all environments when true.
+      alwaysRun: false
     }
 
     # Merge config
@@ -54,19 +57,26 @@ class Fingerprint
           if pattern.test oldFile then fs.unlinkSync filePath
 
       if @options.targets == '*' or (base + ext) in @options.targets
-        # Generate hash
-        data = fs.readFileSync file.path
-        shasum = crypto.createHash 'sha1'
-        shasum.update(data)
-        hash = shasum.digest('hex')[0..@options.hashLength-1]
+        newFileName = ''
 
-        # Make new good path
-        newName = "#{base}-#{hash}#{ext}"
-        newFileName = path.join(dir, newName)
+        if (@config.env[0] not in @options.environments) and !@options.alwaysRun
+          newFileName = file.path
+        else
+          # Generate hash
+          data = fs.readFileSync file.path
+          shasum = crypto.createHash 'sha1'
+          shasum.update(data)
+          hash = shasum.digest('hex')[0..@options.hashLength-1]
+          
+          # Make new good path
+          newName = "#{base}-#{hash}#{ext}"
+          newFileName = path.join(dir, newName)
 
-        # Rename file, with hash
-        fs.renameSync(file.path, newFileName)
+          # Rename file, with hash
+          fs.renameSync(file.path, newFileName)
+
         
+
         # Add link to map
         keyPath = file.path.replace @options.srcBasePath, ""
         realPath = newFileName.replace @options.destBasePath, ""

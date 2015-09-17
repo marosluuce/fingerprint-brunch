@@ -32,6 +32,10 @@ exports.config =
       autoClearOldFiles: false
       # Files you want to hash, default is all else put an array of files like ['app.js', 'vendor.js', ...]
       targets: '*'
+      # Environment to make hash on files
+      environments: ['production']
+      # Force fingerprint-brunch to run in all environments when true.
+      alwaysRun: false
 ```
 
 
