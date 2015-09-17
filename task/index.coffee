@@ -6,6 +6,9 @@ crypto   = require 'crypto'
 
 warn = (message) -> Fingerprint.logger.warn "fingerprint-brunch WARNING: #{message}"
 
+unixify = (pathFile) -> pathFile.split('\\').join('/')
+
+
 class Fingerprint
   brunchPlugin: true
 
@@ -67,7 +70,8 @@ class Fingerprint
         # Add link to map
         keyPath = file.path.replace @options.srcBasePath, ""
         realPath = newFileName.replace @options.destBasePath, ""
-        map[keyPath] = realPath
+
+        map[unixify(keyPath)] = unixify(realPath)
 
     # Merge array to keep not watched files
     if fs.existsSync @options.manifest
