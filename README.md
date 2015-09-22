@@ -3,6 +3,9 @@ fingerprint-brunch
 
 A [Brunch][] plugin witch rename assets with a SHA for fingerprinted it.
 
+[![NPM](https://nodei.co/npm/fingerprint-brunch.png)](https://nodei.co/npm/fingerprint-brunch/)
+[![NPM](https://nodei.co/npm-dl/fingerprint-brunch.png)](https://nodei.co/npm/fingerprint-brunch/)
+
 Installation
 -------
 
