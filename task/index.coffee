@@ -75,11 +75,11 @@ class Fingerprint
           # Rename file, with hash
           fs.renameSync(file.path, newFileName)
 
-        
-
         # Add link to map
-        keyPath = file.path.replace @options.srcBasePath, ""
-        realPath = newFileName.replace @options.destBasePath, ""
+        keyPath = unixify(file.path)
+        keyPath = keyPath.replace @options.srcBasePath, ""
+        realPath = unixify(newFileName)
+        realPath = realPath.replace @options.destBasePath, ""
 
         map[unixify(keyPath)] = unixify(realPath)
 
