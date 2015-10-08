@@ -63,8 +63,7 @@ If your have any questions or suggestions, ask me !
 
 To Do
 -------
-- Hash files only in production (to test, for css-reload)
-- Add a rewriter of file path in css (for images, fonts..)
+- Add a rewriter/replacer of file path in css (for images, fonts..)
 
 
 License
