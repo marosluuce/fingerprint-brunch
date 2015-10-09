@@ -32,7 +32,7 @@ class Fingerprint
       # Force fingerprint-brunch to run in all environments when true.
       alwaysRun: false
     }
-
+    
     # Merge config
     cfg = @config.plugins?.fingerprint ? {}
     @options[k] = cfg[k] for k of cfg

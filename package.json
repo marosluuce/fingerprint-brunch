@@ -7,6 +7,12 @@
     "type": "git",
     "url": "git@github.com:dlepaux/fingerprint-brunch.git"
   },
+  "keywords": [
+    "fingerprint",
+    "hash",
+    "cache-busting",
+    "brunch"
+  ],
   "main": "./task/index",
   "devDependencies": {
     "coffee-script": "~1.9.0",
