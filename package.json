@@ -3,10 +3,6 @@
   "version": "1.0.11",
   "description": "A Brunch plugin for cache busting assets",
   "author": "David Lepaux <d.lepaux@gmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:dlepaux/fingerprint-brunch.git"
-  },
   "keywords": [
     "fingerprint",
     "hash",
@@ -14,11 +10,18 @@
     "brunch"
   ],
   "main": "./task/index",
+  "scripts": {
+    "test": "node_modules/.bin/mocha --compilers coffee:coffee-script/register"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:dlepaux/fingerprint-brunch.git"
+  },
   "devDependencies": {
     "coffee-script": "~1.9.0",
     "lodash": "~3.10.0"
   },
-  "licence": "MIT",
+  "license": "MIT",
   "peerDependencies": {
     "brunch": "~1.8"
   }

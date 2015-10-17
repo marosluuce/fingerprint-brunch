@@ -1,19 +1,17 @@
-fingerprint-brunch
-=============
+# fingerprint-brunch
 
 A [Brunch][] plugin witch rename assets with a SHA for fingerprinted it.
 
 [![NPM](https://nodei.co/npm/fingerprint-brunch.png)](https://nodei.co/npm/fingerprint-brunch/)
 [![NPM](https://nodei.co/npm-dl/fingerprint-brunch.png?months=3)](https://nodei.co/npm/fingerprint-brunch/)
 
-Installation
--------
+## <a name="installation"></a> Installation
 
 `npm install fingerprint-brunch --save-dev`
 
 
-Configuration
--------
+## <a name="configuration"></a> Configuration
+
 _Optional_ You can override fingerprint-brunch's default options by updating your `brunch-config.coffee` with overrides.
 
 Default settings:
@@ -42,8 +40,8 @@ exports.config =
 ```
 
 
-Usage
--------
+## <a name="Usage"></a> Usage
+
 The manifest generated seem to this.
 ```json
 {
@@ -61,13 +59,16 @@ In your code your can make a little script to read this `assets.json` and next g
 If your have any questions or suggestions, ask me !
 
 
-To Do
--------
+## <a name="todo"></a> ToDo
+
 - Add a rewriter/replacer of file path in css (for images, fonts..)
 
+## <a name="testing"></a> Testing
 
-License
--------
+Just run `npm i && npm test`
+
+
+## <a name="license"></a> License
 
 MIT
 
