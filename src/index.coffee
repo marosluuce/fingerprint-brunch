@@ -31,8 +31,19 @@ class Fingerprint
       environments: ['production']
       # Force fingerprint-brunch to run in all environments when true.
       alwaysRun: false
+      # Image pattern format
+      imagePatterns: ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'svg']
+      # Image pattern format
+      fontPatterns: ['woff', 'woff2', 'eot', 'ttf', 'otf', 'svg']
     }
-    
+
+    # FileData
+    @filePath     = null
+    @fileNewName  = null
+    @dir          = null
+    @ext          = null
+    @base         = null
+
     # Merge config
     cfg = @config.plugins?.fingerprint ? {}
     @options[k] = cfg[k] for k of cfg
@@ -42,51 +53,74 @@ class Fingerprint
     map = {}
     # Open files
     for file in generatedFiles
-      #  # Generate the new path (with new filename)
-      dir = path.dirname(file.path)
-      ext = path.extname(file.path)
-      base = path.basename(file.path, ext)
+      # Set var with generatedFile
+      @filePath = file.path
+      @dir      = path.dirname(@filePath)
+      @ext      = path.extname(@filePath)
+      @base     = path.basename(@filePath, @ext)
+
       if @options.autoClearOldFiles
         # Search and destory old files if option is enable
-        pattern = new RegExp(base + '\\-\\w+\\' + ext + '$');
-        files = fs.readdirSync dir
-        for oldFile in files
-          filePath = path.normalize(dir + '/' + oldFile)
-          if pattern.test oldFile then fs.unlinkSync filePath
-      if @options.targets == '*' or (base + ext) in @options.targets
-        newFileName = ''
-        if (@config.env[0] not in @options.environments) and !@options.alwaysRun
-          newFileName = file.path
-        else
-          # Generate hash
-          data = fs.readFileSync file.path
-          shasum = crypto.createHash 'sha1'
-          shasum.update(data)
-          hash = shasum.digest('hex')[0..@options.hashLength-1]
-          # Make new good path
-          newName = "#{base}-#{hash}#{ext}"
-          newFileName = path.join(dir, newName)
-          # Rename file, with hash
-          fs.renameSync(file.path, newFileName)
-        
-        # Add link to map
-        keyPath = unixify(file.path)
+        @_clearOldFiles
+
+      if @options.targets == '*' or (@base + @ext) in @options.targets
+        @fileNewName = @filePath
+        if (@config.env[0] in @options.environments) and @options.alwaysRun
+          @_renameFileToHash()
+
+        # Unixify & Remove part from original path
+        keyPath = unixify(@filePath)
         keyPath = keyPath.replace @options.srcBasePath, ""
-        realPath = unixify(newFileName)
+        realPath = unixify(@fileNewName)
         realPath = realPath.replace @options.destBasePath, ""
-        
+
+        # Make array for manifest
         map[unixify(keyPath)] = unixify(realPath)
-    
+
     # Merge array to keep not watched files
     if fs.existsSync @options.manifest
-      manifest = fs.readFileSync @options.manifest, 'utf8'
-      manifest = JSON.parse manifest
-      manifest[k] = map[k] for k of map
-      output = JSON.stringify manifest, null, "  "
+      @_mergeManifest(map)
     else
-      output = JSON.stringify map, null, "  "
-    
+      @_whriteManifest(map)
+
+  # Clear all old files
+  _clearOldFiles: ->
+    # Find and remove file in dir/base-{hash}.ext
+    pattern = new RegExp(@base + '\\-\\w+\\' + @ext + '$');
+    files = fs.readdirSync @dir
+    for oldFile in files
+      filePath = path.normalize(@dir + '/' + oldFile)
+      if pattern.test oldFile then fs.unlinkSync filePath
+
+  # Generate hash with data of file
+  _generateHash: ->
+    data = fs.readFileSync @filePath
+    shasum = crypto.createHash 'sha1'
+    shasum.update(data)
+    return shasum.digest('hex')[0..@options.hashLength-1]
+
+  _generateFileNameHashed: ->
+    hash = @_generateHash()
+    newName = "#{@base}-#{hash}#{@ext}"
+    return path.join(@dir, newName)
+
+  _renameFileToHash: ->
+    @fileNewName = @_generateFileNameHashed()
+    # Rename file, with hash
+    fs.renameSync(filePath, @fileNewName)
+
+
+  # Manifest
+  _whriteManifest: (map) ->
+    output = JSON.stringify map, null, "  "
     fs.writeFileSync(@options.manifest, output)
+
+  _mergeManifest: (map) ->
+    manifest = fs.readFileSync @options.manifest, 'utf8'
+    manifest = JSON.parse manifest
+    manifest[k] = map[k] for k of map
+    @_whriteManifest(manifest)
+
 
 Fingerprint.logger = console
 module.exports = Fingerprint
