@@ -1,0 +1,25 @@
+{
+  "name": "dev-di-numerique",
+  "version": "0.1.0",
+  "description": "A workflow for dinumerique project",
+  "author": "David Lepaux <d.lepaux@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "start": "brunch watch"
+  },
+  "devDependencies": {
+    "assetsmanager-brunch": "~1.8.1",
+    "brunch": "^1.8.3",
+    "clean-css-brunch": ">= 1.0 < 1.8",
+    "compass-brunch": "*",
+    "css-brunch": ">= 1.0 < 1.8",
+    "fb-flo-brunch": "^1.7.22",
+    "fingerprint-brunch": "^1.0.10",
+    "javascript-brunch": "^1.7.1",
+    "less-brunch": "^1.8.1",
+    "sass-brunch": "^1.8.6",
+    "sprite-brunch": ">= 0.0.3",
+    "cssnano-brunch": ">= 1.1.5",
+    "uglify-js-brunch": ">= 1.0 < 1.8"
+  }
+}
