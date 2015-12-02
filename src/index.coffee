@@ -107,7 +107,7 @@ class Fingerprint
   _renameFileToHash: ->
     @fileNewName = @_generateFileNameHashed()
     # Rename file, with hash
-    fs.renameSync(filePath, @fileNewName)
+    fs.renameSync(@filePath, @fileNewName)
 
 
   # Manifest

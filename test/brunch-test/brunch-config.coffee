@@ -1,18 +1,17 @@
 exports.config =
   paths:
     public: './public'
-    compass: './config.rb'
     watched: ['app']
 
   files:
     javascripts:
       joinTo:
         # Main
-        '/js/master.js': /^(bower_components[\/\\]jquery|app)/
+        '/master.js': /^(bower_components[\/\\]jquery|app)/
 
     stylesheets:
       joinTo:
-        '/css/master.css': /^(app)/
+        '/master.css': /^(app)/
 
   modules:
     wrapper: false
@@ -31,10 +30,10 @@ exports.config =
       debug: 'comments'
       allowCache: true
     fingerprint:
-      manifest: '../app/config/assets/assets.json'
+      manifest: 'assets.json'
       srcBasePath: '../public/'
       destBasePath: '../public/'
       autoClearOldFiles: true
       targets: ['master.js','master.css']
       environments: ['production']
-      alwaysRun: false
+      alwaysRun: true
