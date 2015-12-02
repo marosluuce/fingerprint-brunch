@@ -84,6 +84,9 @@ class Fingerprint
       @_whriteManifest(map)
 
   # Clear all old files
+  # @dir
+  # @base
+  # @ext
   _clearOldFiles: ->
     # Find and remove file in dir/base-{hash}.ext
     pattern = new RegExp(@base + '\\-\\w+\\' + @ext + '$');
@@ -93,17 +96,23 @@ class Fingerprint
       if pattern.test oldFile then fs.unlinkSync filePath
 
   # Generate hash with data of file
+  # @filePath
   _generateHash: ->
     data = fs.readFileSync @filePath
     shasum = crypto.createHash 'sha1'
     shasum.update(data)
     return shasum.digest('hex')[0..@options.hashLength-1]
 
+  # Make the hash
+  # @dir
+  # @base
+  # @ext
   _generateFileNameHashed: ->
     hash = @_generateHash()
     newName = "#{@base}-#{hash}#{@ext}"
     return path.join(@dir, newName)
 
+  # @filePath
   _renameFileToHash: ->
     @fileNewName = @_generateFileNameHashed()
     # Rename file, with hash
@@ -111,10 +120,12 @@ class Fingerprint
 
 
   # Manifest
+  # map
   _whriteManifest: (map) ->
     output = JSON.stringify map, null, "  "
     fs.writeFileSync(@options.manifest, output)
 
+  # map
   _mergeManifest: (map) ->
     manifest = fs.readFileSync @options.manifest, 'utf8'
     manifest = JSON.parse manifest
