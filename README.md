@@ -2,6 +2,13 @@
 
 A [Brunch][] plugin witch rename assets with a SHA for fingerprinted it.
 
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [Usage](#usage)
+- [Testing](#testing)
+- [ToDo](#todo)
+- [License](#license)
+
 [![NPM](https://nodei.co/npm/fingerprint-brunch.png)](https://nodei.co/npm/fingerprint-brunch/)
 [![NPM](https://nodei.co/npm-dl/fingerprint-brunch.png?months=3)](https://nodei.co/npm/fingerprint-brunch/)
 
@@ -40,7 +47,7 @@ exports.config =
 ```
 
 
-## <a name="Usage"></a> Usage
+## <a name="usage"></a> Usage
 
 The manifest generated seem to this.
 ```json
@@ -59,15 +66,13 @@ In your code your can make a little script to read this `assets.json` and next g
 If your have any questions or suggestions, ask me !
 
 
+## <a name="testing"></a> Testing
+
+Just run `npm i && npm test`
 
 ## <a name="todo"></a> ToDo
 
 - Add a rewriter/replacer of file path in css (for images, fonts..)
-
-
-## <a name="testing"></a> Testing
-
-Just run `npm i && npm test`
 
 
 ## <a name="license"></a> License
