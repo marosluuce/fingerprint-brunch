@@ -50,6 +50,7 @@ class Fingerprint
 
 
   onCompile: (generatedFiles) ->
+    # console.log (generatedFiles)
     map = {}
     # Open files
     for file in generatedFiles
@@ -68,8 +69,12 @@ class Fingerprint
 
       if @options.targets == '*' or (@base + @ext) in @options.targets
         @fileNewName = @filePath
-        if (@config.env[0] in @options.environments) and @options.alwaysRun
-          @_renameFileToHash()
+        # console.log @config.env
+        # console.log @options.environments
+        # console.log @options.alwaysRun
+        if (@config.env[0] in @options.environments) or @options.alwaysRun
+          # console.log 'heyooooooooooooooo'
+          @_renameFileToHash(dir, base, ext)
 
         # Unixify & Remove part from original path
         keyPath = unixify(@filePath)
@@ -110,14 +115,14 @@ class Fingerprint
   # @dir
   # @base
   # @ext
-  _generateFileNameHashed: ->
+  _generateFileNameHashed: (dir, base, ext) ->
     hash = @_generateHash()
-    newName = "#{@base}-#{hash}#{@ext}"
-    return path.join(@dir, newName)
+    newName = "#{base}-#{hash}#{ext}"
+    return path.join(dir, newName)
 
   # @filePath
-  _renameFileToHash: ->
-    @fileNewName = @_generateFileNameHashed()
+  _renameFileToHash: (dir, base, ext) ->
+    @fileNewName = @_generateFileNameHashed(dir, base, ext)
     # Rename file, with hash
     fs.renameSync(@filePath, @fileNewName)
 
@@ -134,7 +139,6 @@ class Fingerprint
     manifest = JSON.parse manifest
     manifest[k] = map[k] for k of map
     @_whriteManifest(manifest)
-
 
 Fingerprint.logger = console
 module.exports = Fingerprint

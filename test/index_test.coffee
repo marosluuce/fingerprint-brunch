@@ -11,10 +11,15 @@ Fingerprint.logger = {
 
 
 ASSETS =
-  'js/master.js': 'master-4fab3501.js'
-  'css/master.css': 'master-f667f7a9.css'
-  # 'troll.png': 'troll-uzevcec.png'
+  'css/sample.css': 'js/sample-bcfa7236.css'
+  'js/sample.js': 'js/sample-14625bd2.js'
+  'img/troll.png': 'img/troll-uzevcec.png'
   # 'glyphicon.woff': 'glyphicon-uzevcec.woff'
+
+GENERATED_FILES = [
+  {path:path.join(__dirname, 'public', 'js', 'sample.js')},
+  {path:path.join(__dirname, 'public', 'css', 'sample.css')}
+]
 
 
 fingerprintFilename = (filename) ->
@@ -38,14 +43,13 @@ describe 'Fingerprint', ->
       env: ['production']
       paths:
         public: path.join('test', 'public')
-      optimize: true
     )
 
   # executed after each test
   after ->
     fse.removeSync path.join(__dirname, 'public')
 
-  describe 'general testing', ->
+  describe 'General testing', ->
     # is instance of Plugin
     it 'is an instance of Fingerprint', ->
       expect(fingerprint).to.be.instanceOf(Fingerprint)
@@ -55,18 +59,20 @@ describe 'Fingerprint', ->
       expect(fingerprint.options).to.include.keys('hashLength', 'environments')
 
   # Cleaning in dev env
-  describe 'cleanning old hashed files', ->
+  describe 'Cleanning old hashed files', ->
     beforeEach ->
       # reset & copy assets to public
       setupFakeFileSystem()
 
     # check if exists
-    it 'file to clean exists', ->
-      expect(fingerprintFileExists('js/master-4fab3501.js')).to.be.true
+    it 'is exists', ->
+      pathFile = path.join(__dirname, 'public', 'js/sample.js')
+      expect(fs.existsSync(pathFile)).to.be.true
+
     # cleanning files
-    it 'cleanning file', ->
-      fingerprint._clearOldFiles(path.join(__dirname, 'public', 'js'), 'master', '.js')
-      expect(fingerprintFileExists('js/master-4fab3501.js')).to.be.false
+    it 'is not exists', ->
+      fingerprint._clearOldFiles(path.join(__dirname, 'public', 'js'), 'sample', '.js')
+      expect(fingerprintFileExists('js/sample.js')).to.be.false
 
   # renaming
     # rename css
@@ -74,12 +80,35 @@ describe 'Fingerprint', ->
     # rename fonts
     # rename img
 
-  # manifest
-  describe 'write manifest', ->
+  # Manifest
+  describe 'Manifest', ->
     # regular compile (as new one)
+    describe 'Write manifest', ->
+
     # already exists
+    describe 'Merging manifest', ->
+
 
   # environment detection
+  describe 'Environment detection', ->
+    beforeEach ->
+      # reset & copy assets to public
+      setupFakeFileSystem()
+
+    it 'does not run in non-production environment', ->
+      fingerprint.config.env = []
+      fingerprint.onCompile(GENERATED_FILES)
+      expect(fingerprintFileExists('js/sample.js')).to.be.false
+
+    it 'does run with alwaysRun flag set', ->
+      fingerprint.options.alwaysRun = true
+      fingerprint.onCompile(GENERATED_FILES)
+      expect(fingerprintFileExists('js/sample.js')).to.be.true
+
+    it 'does run in production environment', ->
+      fingerprint.options.env = ['production']
+      fingerprint.onCompile(GENERATED_FILES)
+      expect(fingerprintFileExists('js/sample.js')).to.be.true
 
   # inspecting
     # css
