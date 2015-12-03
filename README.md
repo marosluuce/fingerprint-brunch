@@ -75,5 +75,5 @@ Just run `npm i && npm test`
 MIT
 
 [Brunch]: http://brunch.io
-[travis]: https://travis-ci.org/dlepaux/cssnano-brunch
-[travis-badge]: https://img.shields.io/travis/dlepaux/cssnano-brunch.svg?style=flat
+[travis]: https://travis-ci.org/dlepaux/fingerprint-brunch
+[travis-badge]: https://img.shields.io/travis/dlepaux/fingerprint-brunch.svg?style=flat
