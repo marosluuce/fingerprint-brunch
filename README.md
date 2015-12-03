@@ -1,4 +1,4 @@
-# fingerprint-brunch
+# fingerprint-brunch [![Build Status][travis-badge]][travis]
 
 A [Brunch][] plugin witch rename assets with a SHA for fingerprinted it.
 
@@ -64,6 +64,7 @@ If your have any questions or suggestions, ask me !
 
 - Add a rewriter/replacer of file path in css (for images, fonts..)
 
+
 ## <a name="testing"></a> Testing
 
 Just run `npm i && npm test`
@@ -74,3 +75,5 @@ Just run `npm i && npm test`
 MIT
 
 [Brunch]: http://brunch.io
+[travis]: https://travis-ci.org/dlepaux/cssnano-brunch
+[travis-badge]: https://img.shields.io/travis/dlepaux/cssnano-brunch.svg?style=flat
