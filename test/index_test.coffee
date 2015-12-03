@@ -11,7 +11,7 @@ Fingerprint.logger = {
 
 
 ASSETS =
-  'css/sample.css': 'js/sample-bcfa7236.css'
+  'css/sample.css': 'css/sample-bcfa7236.css'
   'js/sample.js': 'js/sample-14625bd2.js'
   'img/troll.png': 'img/troll-uzevcec.png'
   # 'glyphicon.woff': 'glyphicon-uzevcec.woff'
@@ -74,11 +74,22 @@ describe 'Fingerprint', ->
       fingerprint._clearOldFiles(path.join(__dirname, 'public', 'js'), 'sample', '.js')
       expect(fingerprintFileExists('js/sample.js')).to.be.false
 
-  # renaming
+  # Renaming
+  describe 'Renaming', ->
+    beforeEach ->
+      # reset & copy assets to public
+      setupFakeFileSystem()
+
     # rename css
+    it 'renames sample.css with fingerprint', ->
+      fingerprint.options.alwaysRun = true
+      fingerprint.onCompile(GENERATED_FILES)
+      expect(fingerprintFileExists('css/sample.css')).to.be.true
     # rename js
-    # rename fonts
-    # rename img
+    it 'renames sample.js with fingerprint', ->
+      fingerprint.options.alwaysRun = true
+      fingerprint.onCompile(GENERATED_FILES)
+      expect(fingerprintFileExists('js/sample.js')).to.be.true
 
   # Manifest
   describe 'Manifest', ->
