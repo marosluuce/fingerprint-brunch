@@ -56,12 +56,15 @@ class Fingerprint
       # Set var with generatedFile
       @filePath = file.path
       @dir      = path.dirname(@filePath)
+      dir = @dir
       @ext      = path.extname(@filePath)
+      ext = @ext
       @base     = path.basename(@filePath, @ext)
+      base = @base
 
       if @options.autoClearOldFiles
         # Search and destory old files if option is enable
-        @_clearOldFiles
+        @_clearOldFiles(dir, base, ext)
 
       if @options.targets == '*' or (@base + @ext) in @options.targets
         @fileNewName = @filePath
@@ -84,15 +87,15 @@ class Fingerprint
       @_whriteManifest(map)
 
   # Clear all old files
-  # @dir
-  # @base
-  # @ext
-  _clearOldFiles: ->
+  # dir
+  # base
+  # ext
+  _clearOldFiles: (dir, base, ext) ->
     # Find and remove file in dir/base-{hash}.ext
-    pattern = new RegExp(@base + '\\-\\w+\\' + @ext + '$');
-    files = fs.readdirSync @dir
+    pattern = new RegExp(base + '\\-\\w+\\' + ext + '$');
+    files = fs.readdirSync dir
     for oldFile in files
-      filePath = path.normalize(@dir + '/' + oldFile)
+      filePath = path.normalize(dir + '/' + oldFile)
       if pattern.test oldFile then fs.unlinkSync filePath
 
   # Generate hash with data of file
