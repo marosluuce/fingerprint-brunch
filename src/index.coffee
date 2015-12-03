@@ -40,9 +40,6 @@ class Fingerprint
     # FileData
     @filePath     = null
     @fileNewName  = null
-    @dir          = null
-    @ext          = null
-    @base         = null
 
     # Merge config
     cfg = @config.plugins?.fingerprint ? {}
@@ -50,30 +47,22 @@ class Fingerprint
 
 
   onCompile: (generatedFiles) ->
-    # console.log (generatedFiles)
     map = {}
     # Open files
     for file in generatedFiles
       # Set var with generatedFile
       @filePath = file.path
-      @dir      = path.dirname(@filePath)
-      dir = @dir
-      @ext      = path.extname(@filePath)
-      ext = @ext
-      @base     = path.basename(@filePath, @ext)
-      base = @base
+      dir   = path.dirname(@filePath)
+      ext   = path.extname(@filePath)
+      base  = path.basename(@filePath, ext)
 
       if @options.autoClearOldFiles
         # Search and destory old files if option is enable
         @_clearOldFiles(dir, base, ext)
 
-      if @options.targets == '*' or (@base + @ext) in @options.targets
+      if @options.targets == '*' or (base + ext) in @options.targets
         @fileNewName = @filePath
-        # console.log @config.env
-        # console.log @options.environments
-        # console.log @options.alwaysRun
         if (@config.env[0] in @options.environments) or @options.alwaysRun
-          # console.log 'heyooooooooooooooo'
           @_renameFileToHash(dir, base, ext)
 
         # Unixify & Remove part from original path
@@ -112,9 +101,9 @@ class Fingerprint
     return shasum.digest('hex')[0..@options.hashLength-1]
 
   # Make the hash
-  # @dir
-  # @base
-  # @ext
+  # dir
+  # base
+  # ext
   _generateFileNameHashed: (dir, base, ext) ->
     hash = @_generateHash()
     newName = "#{base}-#{hash}#{ext}"
@@ -140,5 +129,4 @@ class Fingerprint
     manifest[k] = map[k] for k of map
     @_whriteManifest(manifest)
 
-Fingerprint.logger = console
 module.exports = Fingerprint
