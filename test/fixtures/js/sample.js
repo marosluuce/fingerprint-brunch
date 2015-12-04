@@ -1,6 +1,1 @@
-﻿(function ($) {
-	'use strict';
-
-	console.log('dlepaux/fingerprint-brunch is awesome');
-
-})(jQuery);
+﻿var test = 'dlepaux/fingerprint-brunch is awesome';

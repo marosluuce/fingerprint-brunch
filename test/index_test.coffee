@@ -11,8 +11,8 @@ Fingerprint.logger = {
 
 
 ASSETS =
-  'css/sample.css': 'css/sample-bcfa7236.css'
-  'js/sample.js': 'js/sample-14625bd2.js'
+  'css/sample.css': 'css/sample-59b57315.css'
+  'js/sample.js': 'js/sample-5d19fc29.js'
   'img/troll.png': 'img/troll-uzevcec.png'
   # 'glyphicon.woff': 'glyphicon-uzevcec.woff'
 
@@ -28,10 +28,7 @@ fingerprintFilename = (filename) ->
 
 fingerprintFileExists = (filename) ->
   pathFile = fingerprintFilename(filename)
-  console.log pathFile
-  response = fs.existsSync(pathFile)
-  console.log response
-  response
+  fs.existsSync(pathFile)
 
 setupFakeFileSystem = ->
   fse.removeSync path.join(__dirname, 'public')
