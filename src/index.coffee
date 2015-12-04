@@ -47,6 +47,7 @@ class Fingerprint
 
 
   onCompile: (generatedFiles) ->
+    console.log generatedFiles
     map = {}
     # Open files
     for file in generatedFiles
