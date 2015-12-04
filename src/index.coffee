@@ -57,8 +57,8 @@ class Fingerprint
       ext   = path.extname(@filePath)
       base  = path.basename(@filePath, ext)
 
+      # Search and destory old files if option is enable
       if @options.autoClearOldFiles
-        # Search and destory old files if option is enable
         @_clearOldFiles(dir, base, ext)
 
       if @options.targets == '*' or (base + ext) in @options.targets
@@ -112,9 +112,9 @@ class Fingerprint
 
   # @filePath
   _renameFileToHash: (dir, base, ext) ->
-    @fileNewName = @_generateFileNameHashed(dir, base, ext)
+    fileNewName = @_generateFileNameHashed(dir, base, ext)
     # Rename file, with hash
-    fs.renameSync(@filePath, @fileNewName)
+    fs.renameSync(@filePath, fileNewName)
 
 
   # Manifest
