@@ -106,7 +106,6 @@ class Fingerprint
   # ext
   _generateFileNameHashed: (dir, base, ext) ->
     hash = @_generateHash()
-    console.log hash
     newName = "#{base}-#{hash}#{ext}"
     return path.join(dir, newName)
 
