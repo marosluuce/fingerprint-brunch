@@ -11,7 +11,7 @@ Fingerprint.logger = {
 
 
 ASSETS =
-  'css/sample.css': 'css/sample-59b57315.css'
+  'css/sample.css': 'css/sample-f2953d3d.css'
   'js/sample.js': 'js/sample-5d19fc29.js'
   'img/troll.png': 'img/troll-uzevcec.png'
   # 'glyphicon.woff': 'glyphicon-uzevcec.woff'

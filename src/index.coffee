@@ -97,7 +97,7 @@ class Fingerprint
   _generateHash: ->
     data = fs.readFileSync @filePath
     shasum = crypto.createHash 'sha1'
-    shasum.update(data)
+    shasum.update(data, 'utf8')
     return shasum.digest('hex')[0..@options.hashLength-1]
 
   # Make the hash
