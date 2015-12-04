@@ -27,7 +27,9 @@ fingerprintFilename = (filename) ->
   path.join(__dirname, 'public', filename)
 
 fingerprintFileExists = (filename) ->
-  fs.existsSync(fingerprintFilename(filename))
+  pathFile = fingerprintFilename(filename)
+  console.log pathFile
+  fs.existsSync(pathFile)
 
 setupFakeFileSystem = ->
   fse.removeSync path.join(__dirname, 'public')
