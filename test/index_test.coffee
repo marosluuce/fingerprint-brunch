@@ -16,6 +16,11 @@ ASSETS =
   'img/troll.png': 'img/troll-uzevcec.png'
   # 'glyphicon.woff': 'glyphicon-uzevcec.woff'
 
+MAP =
+  'public/css/sample.css': 'public/css/sample-59b57315.css'
+  'public/js/sample.js': 'public/js/sample-5d19fc29.js'
+  'public/img/troll.png': 'public/img/troll-uzevcec.png'
+
 GENERATED_FILES = [
   {path:path.join(__dirname, 'public', 'js', 'sample.js')},
   {path:path.join(__dirname, 'public', 'css', 'sample.css')}
@@ -93,12 +98,11 @@ describe 'Fingerprint', ->
       expect(fingerprintFileExists('js/sample.js')).to.be.true
 
   # Manifest
-  describe 'Manifest', ->
+  describe 'Write Manifest', ->
     # regular compile (as new one)
-    describe 'Write manifest', ->
-
+    describe 'as new one', ->
     # already exists
-    describe 'Merging manifest', ->
+    describe 'is already exists', ->
 
 
   # environment detection
@@ -122,9 +126,17 @@ describe 'Fingerprint', ->
       fingerprint.onCompile(GENERATED_FILES)
       expect(fingerprintFileExists('js/sample.js')).to.be.true
 
-  # inspecting
-    # css
+
+  # Matching assets to hash
+  describe 'Matching assets to hash', ->
+    describe 'css files', ->
       # fonts => pattern font file
+        # localiser le fichier css
+        # localiser physiquement les fichiers sources concernés
+          # app/assets => copié sans modification => écriture du fichier avec fsNode
+          # app/fonts => copié via assetsmanager
+        # renomer les fichiers physiquement
+        # renomer les fichiers dans la css
       # img => pattern image file
-    # js
+    describe 'js files', ->
       # img pattern image file
