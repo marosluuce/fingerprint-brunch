@@ -41,13 +41,15 @@ class Fingerprint
     @filePath     = null
     @fileNewName  = null
 
+    # Manifest map
+    @map          = {}
+
     # Merge config
     cfg = @config.plugins?.fingerprint ? {}
     @options[k] = cfg[k] for k of cfg
 
 
   onCompile: (generatedFiles) ->
-    map = {}
     # Open files
     for file in generatedFiles
       # Set var with generatedFile
@@ -72,13 +74,13 @@ class Fingerprint
         realPath = realPath.replace @options.destBasePath, ""
 
         # Make array for manifest
-        map[unixify(keyPath)] = unixify(realPath)
+        @map[unixify(keyPath)] = unixify(realPath)
 
     # Merge array to keep not watched files
     if fs.existsSync @options.manifest
-      @_mergeManifest(map)
+      @_mergeManifest(@map)
     else
-      @_whriteManifest(map)
+      @_whriteManifest(@map)
 
   # Clear all old files
   # dir
