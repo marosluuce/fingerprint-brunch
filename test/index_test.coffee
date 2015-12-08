@@ -104,7 +104,7 @@ describe 'Fingerprint', ->
       fs.unlinkSync fingerprint.options.manifest
       fingerprint.options.alwaysRun = true
       fingerprint._whriteManifest(MAP)
-      exists = fs.existsSync(path.join(__dirname, fingerprint.options.manifest))
+      exists = fs.existsSync(fingerprint.options.manifest)
       expect(exists).to.be.true
     # already exists
     # describe 'is already exists', ->
