@@ -49,6 +49,9 @@ describe 'Fingerprint', ->
       env: ['production']
       paths:
         public: path.join('test', 'public')
+      plugins:
+        fingerprint:
+          manifest: './test/public/assets.json'
     )
 
   # executed after each test
@@ -56,26 +59,21 @@ describe 'Fingerprint', ->
     fse.removeSync path.join(__dirname, 'public')
 
   describe 'General testing', ->
-    # is instance of Plugin
     it 'is an instance of Fingerprint', ->
       expect(fingerprint).to.be.instanceOf(Fingerprint)
 
-    # has default config
     it 'has default config keys', ->
       expect(fingerprint.options).to.include.keys('hashLength', 'environments')
 
   # Cleaning in dev env
   describe 'Cleanning old hashed files', ->
     beforeEach ->
-      # reset & copy assets to public
       setupFakeFileSystem()
 
-    # check if exists
     it 'is exists', ->
       pathFile = path.join(__dirname, 'public', 'js/sample.js')
       expect(fs.existsSync(pathFile)).to.be.true
 
-    # cleanning files
     it 'is not exists', ->
       fingerprint._clearOldFiles(path.join(__dirname, 'public', 'js'), 'sample', '.js')
       expect(fingerprintFileExists('js/sample.js')).to.be.false
@@ -83,15 +81,13 @@ describe 'Fingerprint', ->
   # Renaming
   describe 'Renaming', ->
     beforeEach ->
-      # reset & copy assets to public
       setupFakeFileSystem()
 
-    # rename css
     it 'renames sample.css with fingerprint', ->
       fingerprint.options.alwaysRun = true
       fingerprint.onCompile(GENERATED_FILES)
       expect(fingerprintFileExists('css/sample.css')).to.be.true
-    # rename js
+
     it 'renames sample.js with fingerprint', ->
       fingerprint.options.alwaysRun = true
       fingerprint.onCompile(GENERATED_FILES)
@@ -100,27 +96,22 @@ describe 'Fingerprint', ->
   # Manifest
   describe 'Write Manifest', ->
     beforeEach ->
-      # reset & copy assets to public
       setupFakeFileSystem()
 
-    # regular compile (as new one)
     it 'as new one', ->
-      fingerprint._removeManifest()
       fingerprint._whriteManifest(MAP)
       exists = fs.existsSync(fingerprint.options.manifest)
       expect(exists).to.be.true
-    # already exists
+
     it 'merging an already existing one', ->
-      fingerprint._removeManifest()
       fingerprint._whriteManifest(MAP)
       fingerprint._mergeManifest(ASSETS)
       exists = fs.existsSync(fingerprint.options.manifest)
       expect(exists).to.be.true
 
-  # environment detection
+  # Environment detection
   describe 'Environment detection', ->
     beforeEach ->
-      # reset & copy assets to public
       setupFakeFileSystem()
 
     it 'does not run in non-production environment', ->
@@ -137,7 +128,6 @@ describe 'Fingerprint', ->
       fingerprint.options.env = ['production']
       fingerprint.onCompile(GENERATED_FILES)
       expect(fingerprintFileExists('js/sample.js')).to.be.true
-
 
   # Matching assets to hash
   describe 'Matching assets to hash', ->
