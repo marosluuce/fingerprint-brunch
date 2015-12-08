@@ -99,16 +99,23 @@ describe 'Fingerprint', ->
 
   # Manifest
   describe 'Write Manifest', ->
+    beforeEach ->
+      # reset & copy assets to public
+      setupFakeFileSystem()
+
     # regular compile (as new one)
     it 'as new one', ->
-      fs.unlinkSync fingerprint.options.manifest
-      fingerprint.options.alwaysRun = true
+      fingerprint._removeManifest()
       fingerprint._whriteManifest(MAP)
       exists = fs.existsSync(fingerprint.options.manifest)
       expect(exists).to.be.true
     # already exists
-    # describe 'is already exists', ->
-
+    it 'merging an already existing one', ->
+      fingerprint._removeManifest()
+      fingerprint._whriteManifest(MAP)
+      fingerprint._mergeManifest(ASSETS)
+      exists = fs.existsSync(fingerprint.options.manifest)
+      expect(exists).to.be.true
 
   # environment detection
   describe 'Environment detection', ->
