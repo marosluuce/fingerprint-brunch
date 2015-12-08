@@ -100,9 +100,14 @@ describe 'Fingerprint', ->
   # Manifest
   describe 'Write Manifest', ->
     # regular compile (as new one)
-    describe 'as new one', ->
+    it 'as new one', ->
+      fs.unlinkSync fingerprint.options.manifest
+      fingerprint.options.alwaysRun = true
+      fingerprint._whriteManifest(MAP)
+      exists = fs.existsSync(path.join(__dirname, fingerprint.options.manifest))
+      expect(exists).to.be.true
     # already exists
-    describe 'is already exists', ->
+    # describe 'is already exists', ->
 
 
   # environment detection
