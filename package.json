@@ -9,7 +9,7 @@
     "cache-busting",
     "brunch"
   ],
-  "main": "./task/index",
+  "main": "./src/index",
   "scripts": {
     "test": "node_modules/.bin/mocha --compilers coffee:coffee-script/register"
   },
