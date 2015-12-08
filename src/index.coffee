@@ -119,6 +119,10 @@ class Fingerprint
 
 
   # Manifest
+  _removeManifest: ->
+    # manifest = fs.readFileSync @options.manifest, 'utf8'
+    fs.unlinkSync @options.manifest
+
   # map
   _whriteManifest: (map) ->
     output = JSON.stringify map, null, "  "
