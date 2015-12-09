@@ -33,6 +33,7 @@ class Fingerprint
       # autoReplaceAndHash assets in css/js
       autoReplaceAndHash: true
       # Image pattern format
+      # authorized chars : ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=
       imagePatterns: new RegExp(/url\([\'\"]?[a-zA-Z0-9\-\/_.:]+\.(woff|woff2|eot|ttf|otf|jpg|jpeg|png|bmp|gif|svg)\??\#?[a-zA-Z0-9\-\/_]*[\'\"]?\)/g)
     }
     # Merge config
@@ -81,19 +82,32 @@ class Fingerprint
     contents = fs.readFileSync(filePath).toString()
     paths = contents.match(@options.imagePatterns)
     if paths != null
+      map = {}
       Object.keys(paths).forEach (key) ->
         # get path
         match = paths[key]
-        paths[key] = paths[key].substring(paths[key].lastIndexOf("(")+1,paths[key].lastIndexOf(")")).replace(/\"/g,'').replace(/\'/g,"").replace(/\#[a-zA-Z0-9\-\/_]*/g,"").replace(/\?[a-zA-Z0-9\-\/\#_]*/g,"")
+        paths[key] = paths[key].substring(paths[key].lastIndexOf("(")+1,paths[key].lastIndexOf(")")).replace(/\"/g,'').replace(/\'/g,"")
+        finalHash = ''
+        param = paths[key].match(/(\?|\#)[a-zA-Z0-9\-\/\#_]*/g)
+        if param != null
+          Object.keys(param).map (key) ->
+            finalHash += param[key]
+        paths[key] = paths[key].replace(/(\?|\#)[a-zA-Z0-9\-\/\#_]*/g, '')
         # target exists ?
-        targetPath = path.join(config.paths.public, paths[key])
-        if fs.existsSync(targetPath)
-          # rename file
-          targetNewName = that._renameFileToHash(targetPath)
+        targetPath = unixify(path.join(config.paths.public, paths[key]))
+        if fs.existsSync(map[targetPath] || targetPath)
+          if typeof(map[targetPath]) == 'undefined'
+            # rename file
+            targetNewName = that._renameFileToHash(targetPath)
+            map[unixify(targetPath)] = unixify(path.join(config.paths.public, targetNewName.substring(config.paths.public.length)))
+          else
+            targetNewName = map[targetPath]
           match = new RegExp(match.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'g')
+          # add to map
           # rename path in css
-          contents = contents.replace(match, "url('" + unixify(targetNewName.substring(targetNewName.lastIndexOf("public")+6)) + "')")
+          contents = contents.replace(match, "url('" + unixify(targetNewName.substring(config.paths.public.length)) + finalHash + "')")
 
+      console.log map
       if (config.env[0] in options.environments) or options.alwaysRun
         filePath = that._generateFileNameHashed(filePath, contents)
 
@@ -141,11 +155,6 @@ class Fingerprint
     fileNewName = @_generateFileNameHashed(filePath)
     # Rename file, with hash
     fs.renameSync(filePath, fileNewName)
-    fileNewName
-
-  _writeFileToHash: (filePath) ->
-    fileNewName = @_generateFileNameHashed(filePath)
-    # Rename file, with hash
     fileNewName
 
   # Manifest
