@@ -154,6 +154,7 @@ class Fingerprint
   _renameFileToHash: (filePath) ->
     fileNewName = @_generateFileNameHashed(filePath)
     # Rename file, with hash
+    console.log fileNewName
     fs.renameSync(filePath, fileNewName)
     fileNewName
 
