@@ -13,13 +13,10 @@ Fingerprint.logger = {
 ASSETS =
   'css/sample.css': 'css/sample-59b57315.css'
   'js/sample.js': 'js/sample-5d19fc29.js'
-  'img/troll.png': 'img/troll-uzevcec.png'
-  # 'glyphicon.woff': 'glyphicon-uzevcec.woff'
 
 MAP =
   'public/css/sample.css': 'public/css/sample-59b57315.css'
   'public/js/sample.js': 'public/js/sample-5d19fc29.js'
-  'public/img/troll.png': 'public/img/troll-uzevcec.png'
 
 GENERATED_FILES = [
   {path:path.join(__dirname, 'public', 'js', 'sample.js')},
