@@ -6,7 +6,6 @@ A [Brunch][] plugin witch rename assets with a SHA for fingerprinted it.
 - [Configuration](#configuration)
 - [Usage](#usage)
 - [Testing](#testing)
-- [ToDo](#todo)
 - [License](#license)
 
 [![NPM](https://nodei.co/npm/fingerprint-brunch.png)](https://nodei.co/npm/fingerprint-brunch/)
@@ -69,10 +68,6 @@ If your have any questions or suggestions, ask me !
 ## <a name="testing"></a> Testing
 
 Just run `npm i && npm test`
-
-## <a name="todo"></a> ToDo
-
-- Add a rewriter/replacer of file path in css (for images, fonts..)
 
 
 ## <a name="license"></a> License
