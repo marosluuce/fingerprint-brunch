@@ -35,6 +35,7 @@ class Fingerprint
       # Image pattern format
       # authorized chars : ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=
       imagePatterns: new RegExp(/url\([\'\"]?[a-zA-Z0-9\-\/_.:]+\.(woff|woff2|eot|ttf|otf|jpg|jpeg|png|bmp|gif|svg)\??\#?[a-zA-Z0-9\-\/_]*[\'\"]?\)/g)
+      paramettersPattern: /(\?|\&)([^=\n]+)\=([^&\n]+)/gm
     }
     # Map of assets
     @map = {}
@@ -115,11 +116,11 @@ class Fingerprint
         match = paths[key]
         paths[key] = paths[key].substring(paths[key].lastIndexOf("(")+1,paths[key].lastIndexOf(")")).replace(/\"/g,'').replace(/\'/g,"")
         finalHash = ''
-        param = paths[key].match(/(\?|\#)[a-zA-Z0-9\-\/\#_]*/g)
+        param = paths[key].match(options.paramettersPattern)
         if param != null
           Object.keys(param).map (key) ->
             finalHash += param[key]
-        paths[key] = paths[key].replace(/(\?|\#)[a-zA-Z0-9\-\/\#_]*/g, '')
+        paths[key] = paths[key].replace(options.paramettersPattern, '')
         # target exists ?
         targetPath = unixify(path.join(config.paths.public, paths[key]))
         if fs.existsSync(that.map[targetPath] || targetPath)
