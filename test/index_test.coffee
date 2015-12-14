@@ -96,12 +96,12 @@ describe 'Fingerprint', ->
       setupFakeFileSystem()
 
     it 'as new one', ->
-      fingerprint._whriteManifest(MAP)
+      fingerprint._writeManifest(MAP)
       exists = fs.existsSync(fingerprint.options.manifest)
       expect(exists).to.be.true
 
     it 'merging an already existing one', ->
-      fingerprint._whriteManifest(MAP)
+      fingerprint._writeManifest(MAP)
       fingerprint._mergeManifest(ASSETS)
       exists = fs.existsSync(fingerprint.options.manifest)
       expect(exists).to.be.true
