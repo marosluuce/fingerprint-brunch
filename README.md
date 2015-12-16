@@ -54,77 +54,77 @@ With `srcBasePath` and `destBasePath` you can remove some part of your path file
 
 ### manifest
 
-Type: `String`
+Type: `String`  
 Default: `./assets.json`
 
 Mapping fingerprinted files
 
 ### srcBasePath
 
-Type: `String`
+Type: `String`  
 Default: `exemple/`
 
 The base Path you want to remove from the `key` string in the mapping file
 
 ### destBasePath
 
-Type: `String`
+Type: `String`  
 Default: `out/`
 
 The base Path you want to remove from the `value` string in the mapping file
 
 ### hashLength
 
-Type: `Integer`
+Type: `Integer`  
 Default: `8`
 
 How many digits of the SHA1
 
 ### autoClearOldFiles
 
-Type: `Boolean`
+Type: `Boolean`  
 Default: `false`
 
 Remove old fingerprinted files (usefull in development env)
 
 ### targets
 
-Type: `String|Array`
+Type: `String|Array`  
 Default: `*`
 
 Files you want to hash, default is all if not you can put an array of files in your `joinTo` like ['app.js', 'vendor.js', ...]
 
 ### environments
 
-Type: `Array`
+Type: `Array`  
 Default: `['production']`
 
 Environment to fingerprint files
 
 ### alwaysRun
 
-Type: `Boolean`
+Type: `Boolean`  
 Default: `false`
 
 Force fingerprint-brunch to run in all environments when true.
 
 ### autoReplaceAndHash
 
-Type: `Boolean`
+Type: `Boolean`  
 Default: `false`
 
 Find assets in your `jointTo` files. It will be finded with `url('path/to/assets.jpg')` in your css (for now)
 
 ### assetsPatterns
 
-Type: `RegExp Object`
+Type: `RegExp Object`  
 Default: `new RegExp(/url\([\'\"]?[a-zA-Z0-9\-\/_.:]+\.(woff|woff2|eot|ttf|otf|jpg|jpeg|png|bmp|gif|svg)\??\#?[a-zA-Z0-9\-\/_]*[\'\"]?\)/g)`
 
 Regex to match assets in css with `url()` attribute
 
 ### paramettersPattern
 
-Type: `Regex`
+Type: `Regex`  
 Default: `/(\?|\&|\#)([^=]?)([^&]*)/gm`
 
 Match hash and parameters in an URL
