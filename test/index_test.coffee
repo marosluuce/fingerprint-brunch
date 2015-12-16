@@ -13,19 +13,21 @@ Fingerprint.logger = {
 ASSETS =
   'css/sample.css': 'css/sample-c7d1cfa4.css'
   'js/sample.js': 'js/sample-5d19fc29.js'
+
+MAP =
+  'public/css/sample.css': 'public/css/sample-c7d1cfa4.css'
+  'public/js/sample.js': 'public/js/sample-5d19fc29.js'
+
+AUTOREPLACE_ASSETS =
+  'css/sample.css': 'css/sample-405c39f7.css'
   'img/troll.png': 'img/troll-5f2d5cbe.png'
   'fonts/font.eot': 'fonts/font-45d860a3.eot'
   'fonts/font.woff': 'fonts/font-6ced13b9.woff'
   'fonts/font.ttf': 'fonts/font-82c653e7.ttf'
   'fonts/font.svg': 'fonts/font-52343d4f.svg'
 
-AUTOREPLACE_ASSETS =
-  'css/sample.css': 'css/sample-405c39f7.css'
-
-MAP =
-  'public/css/sample.css': 'public/css/sample-c7d1cfa4.css'
-  #'public/css/sample.css': 'public/css/sample-405c39f7.css' if autoReplace active
-  'public/js/sample.js': 'public/js/sample-5d19fc29.js'
+AUTOREPLACE_MAP =
+  'public/css/sample.css': 'public/css/sample-405c39f7.css'
   'public/img/troll.png': 'public/img/troll-5f2d5cbe.png'
   'public/fonts/font.eot': 'public/fonts/font-45d860a3.eot'
   'public/fonts/font.woff': 'public/fonts/font-6ced13b9.woff'
@@ -44,6 +46,14 @@ fingerprintFilename = (filename) ->
 
 fingerprintFileExists = (filename) ->
   pathFile = fingerprintFilename(filename)
+  fs.existsSync(pathFile)
+
+fingerprintAutoReplaceFilename = (filename) ->
+  filename = AUTOREPLACE_ASSETS[filename] || filename
+  path.join(__dirname, 'public', filename)
+
+fingerprintAutoReplaceFileExists = (filename) ->
+  pathFile = fingerprintAutoReplaceFilename(filename)
   fs.existsSync(pathFile)
 
 setupFakeFileSystem = ->
@@ -94,6 +104,9 @@ describe 'Fingerprint', ->
       fingerprint._clearOldFiles(path.join(__dirname, 'public', 'js'), 'sample', '.js')
       expect(fingerprintFileExists('js/sample.js')).to.be.false
 
+
+
+
   # Renaming
   describe 'Renaming', ->
     beforeEach ->
@@ -125,10 +138,15 @@ describe 'Fingerprint', ->
       exists = fs.existsSync(fingerprint.options.manifest)
       expect(exists).to.be.true
 
+    it 'add data to @map', ->
+      fingerprint._addToMap('test/test.js', 'test/test-123456.js')
+      expect(fingerprint.map['test/test.js']).to.be.equal('test/test-123456.js')
+
   # Environment detection
   describe 'Environment detection', ->
     beforeEach ->
       setupFakeFileSystem()
+
 
     it 'does not run in non-production environment', ->
       fingerprint.config.env = []
@@ -148,13 +166,39 @@ describe 'Fingerprint', ->
   # Matching assets to hash
   describe 'Matching assets to hash', ->
     describe 'css files', ->
-      # fonts => pattern font file
-        # localiser le fichier css
-        # localiser physiquement les fichiers sources concernés
-          # app/assets => copié sans modification => écriture du fichier avec fsNode
-          # app/fonts => copié via assetsmanager
-        # renomer les fichiers physiquement
-        # renomer les fichiers dans la css
-      # img => pattern image file
-    describe 'js files', ->
+      beforeEach ->
+        setupFakeFileSystem()
+
+      it 'assets inner finded', ->
+        samplePath = path.join(__dirname, 'public', 'css', 'sample.css')
+        data = fingerprint._getAssetsInner(samplePath)
+        expect(data.filePaths).to.not.equal(null)
+
+      it 'extract params from url assets', ->
+        url = 'http://github.com/dlepaux/fingerprint-brunch?test=test'
+        hash = fingerprint._extractHashFromURL(url)
+        expect(hash).to.be.equal('?test=test')
+
+      it 'extract hash from url assets', ->
+        url = 'http://github.com/dlepaux/fingerprint-brunch#test=test'
+        hash = fingerprint._extractHashFromURL(url)
+        expect(hash).to.be.equal('#test=test')
+
+      it 'extract both from url assets', ->
+        url = 'http://github.com/dlepaux/fingerprint-brunch?test=test#test'
+        hash = fingerprint._extractHashFromURL(url)
+        expect(hash).to.be.equal('?test=test#test')
+
+      it 'extract url from css "url()" attribute', ->
+        cssUrl = 'url("test.png")'
+        url = fingerprint._extractURL(cssUrl)
+        expect(url).to.be.equal('test.png')
+
+      it 'autoReplace in css sample', ->
+        fingerprint.options.alwaysRun = true
+        fingerprint.options.autoReplaceAndHash = true
+        fingerprint.onCompile(GENERATED_FILES)
+        expect(fingerprintAutoReplaceFileExists('css/sample.css')).to.be.true
+
+    #describe 'js files', ->
       # img pattern image file

@@ -113,7 +113,7 @@ class Fingerprint
     that = this
 
     # Return content of filePath and match pattern
-    data = @_getDataFilePath(filePath)
+    data = @_getAssetsInner(filePath)
     if data.filePaths != null
       Object.keys(data.filePaths).forEach (key) ->
 
@@ -152,7 +152,7 @@ class Fingerprint
     else
       @_makeCoffee(filePath)
 
-  _getDataFilePath: (filePath) ->
+  _getAssetsInner: (filePath) ->
     fileContent = fs.readFileSync(filePath).toString()
     return {fileContent:fileContent, filePaths:fileContent.match(@options.assetsPattern)}
 
