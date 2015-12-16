@@ -29,9 +29,9 @@ class Fingerprint
       # Environment to make hash on files
       environments: ['production']
       # Force fingerprint-brunch to run in all environments when true.
-      alwaysRun: true
+      alwaysRun: false
       # autoReplaceAndHash assets in css/js, like a font linked in an url() in your css
-      autoReplaceAndHash: true
+      autoReplaceAndHash: false
 
       # Assets pattern
       assetsPattern: new RegExp(/url\([\'\"]?[a-zA-Z0-9\-\/_.:]+\.(woff|woff2|eot|ttf|otf|jpg|jpeg|png|bmp|gif|svg)\??\#?[a-zA-Z0-9\-\/_]*[\'\"]?\)/g)
