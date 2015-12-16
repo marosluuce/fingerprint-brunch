@@ -87,9 +87,36 @@ describe 'Fingerprint', ->
       expect(fingerprint.options).to.include.keys('hashLength', 'environments')
 
 
-
   # Testing pattern
   describe 'Pattern testing', ->
+    beforeEach ->
+      setupFakeFileSystem()
+
+    it 'assets inner finded', ->
+      samplePath = path.join(__dirname, 'public', 'css', 'sample.css')
+      data = fingerprint._getAssetsInner(samplePath)
+      expect(data.filePaths).to.not.equal(null)
+
+    it 'extract params from url assets', ->
+      url = 'http://github.com/dlepaux/fingerprint-brunch?test=test'
+      hash = fingerprint._extractHashFromURL(url)
+      expect(hash).to.be.equal('?test=test')
+
+    it 'extract hash from url assets', ->
+      url = 'http://github.com/dlepaux/fingerprint-brunch#test=test'
+      hash = fingerprint._extractHashFromURL(url)
+      expect(hash).to.be.equal('#test=test')
+
+    it 'extract both from url assets', ->
+      url = 'http://github.com/dlepaux/fingerprint-brunch?test=test#test'
+      hash = fingerprint._extractHashFromURL(url)
+      expect(hash).to.be.equal('?test=test#test')
+
+    it 'escape string for regexifisation', ->
+      string = 'url(/img/test.png)'
+      string = fingerprint._escapeStringToRegex(string)
+      expect(string).to.be.equal('url\\(\\/img\\/test\\.png\\)')
+
 
   # Cleaning in dev env
   describe 'Cleanning old hashed files', ->
@@ -103,8 +130,6 @@ describe 'Fingerprint', ->
     it 'is not exists', ->
       fingerprint._clearOldFiles(path.join(__dirname, 'public', 'js'), 'sample', '.js')
       expect(fingerprintFileExists('js/sample.js')).to.be.false
-
-
 
 
   # Renaming
@@ -121,6 +146,7 @@ describe 'Fingerprint', ->
       fingerprint.options.alwaysRun = true
       fingerprint.onCompile(GENERATED_FILES)
       expect(fingerprintFileExists('js/sample.js')).to.be.true
+
 
   # Manifest
   describe 'Write Manifest', ->
@@ -142,11 +168,11 @@ describe 'Fingerprint', ->
       fingerprint._addToMap('test/test.js', 'test/test-123456.js')
       expect(fingerprint.map['test/test.js']).to.be.equal('test/test-123456.js')
 
+
   # Environment detection
   describe 'Environment detection', ->
     beforeEach ->
       setupFakeFileSystem()
-
 
     it 'does not run in non-production environment', ->
       fingerprint.config.env = []
@@ -163,31 +189,12 @@ describe 'Fingerprint', ->
       fingerprint.onCompile(GENERATED_FILES)
       expect(fingerprintFileExists('js/sample.js')).to.be.true
 
+
   # Matching assets to hash
-  describe 'Matching assets to hash', ->
+  describe 'auto replace assets inner', ->
     describe 'css files', ->
       beforeEach ->
         setupFakeFileSystem()
-
-      it 'assets inner finded', ->
-        samplePath = path.join(__dirname, 'public', 'css', 'sample.css')
-        data = fingerprint._getAssetsInner(samplePath)
-        expect(data.filePaths).to.not.equal(null)
-
-      it 'extract params from url assets', ->
-        url = 'http://github.com/dlepaux/fingerprint-brunch?test=test'
-        hash = fingerprint._extractHashFromURL(url)
-        expect(hash).to.be.equal('?test=test')
-
-      it 'extract hash from url assets', ->
-        url = 'http://github.com/dlepaux/fingerprint-brunch#test=test'
-        hash = fingerprint._extractHashFromURL(url)
-        expect(hash).to.be.equal('#test=test')
-
-      it 'extract both from url assets', ->
-        url = 'http://github.com/dlepaux/fingerprint-brunch?test=test#test'
-        hash = fingerprint._extractHashFromURL(url)
-        expect(hash).to.be.equal('?test=test#test')
 
       it 'extract url from css "url()" attribute', ->
         cssUrl = 'url("test.png")'
