@@ -166,7 +166,6 @@ describe 'Fingerprint', ->
 
     it 'add data to @map', ->
       fingerprint._addToMap(path.join(fingerprint.config.paths.public, 'test/test.js'), path.join(fingerprint.config.paths.public, 'test/test-123456.js'))
-      console.log fingerprint.map
       expect(fingerprint.map['test/test.js']).to.be.equal('test/test-123456.js')
 
 

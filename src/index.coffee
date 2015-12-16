@@ -40,7 +40,7 @@ class Fingerprint
       paramettersPattern: /(\?|\&|\#)([^=]?)([^&]*)/gm
 
       # verbose flag
-      verbose: true
+      verbose: false
     }
     # Map of assets
     @map = {}
@@ -95,6 +95,7 @@ class Fingerprint
     fileInput = fileInput.replace @options.srcBasePath, ""
     fileOutput = fileOutput.replace @options.destBasePath, ""
     # Adding to @map var
+    console.log fileOutput
     @map[fileInput] = fileOutput
 
   # Remove path before the public
