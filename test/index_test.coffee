@@ -191,21 +191,18 @@ describe 'Fingerprint', ->
 
 
   # Matching assets to hash
-  describe 'auto replace assets inner', ->
-    describe 'css files', ->
-      beforeEach ->
-        setupFakeFileSystem()
+  describe 'AutoReplace inner assets', ->
+    beforeEach ->
+      setupFakeFileSystem()
 
-      it 'extract url from css "url()" attribute', ->
-        cssUrl = 'url("test.png")'
-        url = fingerprint._extractURL(cssUrl)
-        expect(url).to.be.equal('test.png')
+    it 'extract url from css "url()" attribute', ->
+      cssUrl = 'url("test.png")'
+      url = fingerprint._extractURL(cssUrl)
+      expect(url).to.be.equal('test.png')
 
-      it 'autoReplace in css sample', ->
-        fingerprint.options.alwaysRun = true
-        fingerprint.options.autoReplaceAndHash = true
-        fingerprint.onCompile(GENERATED_FILES)
-        expect(fingerprintAutoReplaceFileExists('css/sample.css')).to.be.true
+    it 'autoReplace in css sample', ->
+      fingerprint.options.alwaysRun = true
+      fingerprint.options.autoReplaceAndHash = true
+      fingerprint.onCompile(GENERATED_FILES)
+      expect(fingerprintAutoReplaceFileExists('css/sample.css')).to.be.true
 
-    #describe 'js files', ->
-      # img pattern image file
