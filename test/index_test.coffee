@@ -47,7 +47,7 @@ fingerprintFileExists = (filename) ->
   fs.existsSync(pathFile)
 
 setupFakeFileSystem = ->
-  #fse.removeSync path.join(__dirname, 'public')
+  fse.removeSync path.join(__dirname, 'public')
   fse.copySync path.join(__dirname, 'fixtures'), path.join(__dirname, 'public')
 
 
@@ -67,7 +67,7 @@ describe 'Fingerprint', ->
 
   # executed after each test
   after ->
-    #fse.removeSync path.join(__dirname, 'public')
+    fse.removeSync path.join(__dirname, 'public')
 
   describe 'General testing', ->
     it 'is an instance of Fingerprint', ->
