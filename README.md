@@ -43,6 +43,14 @@ exports.config =
       environments: ['production']
       # Force fingerprint-brunch to run in all environments when true.
       alwaysRun: false
+      # autoReplaceAndHash assets in css/js, like a font linked in an url() in your css
+      autoReplaceAndHash: false
+
+      # Assets pattern
+      assetsPatterns: new RegExp(/url\([\'\"]?[a-zA-Z0-9\-\/_.:]+\.(woff|woff2|eot|ttf|otf|jpg|jpeg|png|bmp|gif|svg)\??\#?[a-zA-Z0-9\-\/_]*[\'\"]?\)/g)
+      # URL parameters pattern
+      paramettersPattern: new RegExp(/(\?|\&)([^=\n]+)\=([^&\n]+)/gm)
+
 ```
 
 

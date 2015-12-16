@@ -29,13 +29,18 @@ class Fingerprint
       # Environment to make hash on files
       environments: ['production']
       # Force fingerprint-brunch to run in all environments when true.
-      alwaysRun: false
-      # autoReplaceAndHash assets in css/js
-      autoReplaceAndHash: false
-      # Image pattern format
+      alwaysRun: true
+      # autoReplaceAndHash assets in css/js, like a font linked in an url() in your css
+      autoReplaceAndHash: true
+
+      # Assets pattern
+      assetsPattern: new RegExp(/url\([\'\"]?[a-zA-Z0-9\-\/_.:]+\.(woff|woff2|eot|ttf|otf|jpg|jpeg|png|bmp|gif|svg)\??\#?[a-zA-Z0-9\-\/_]*[\'\"]?\)/g)
+      # URL parameters pattern
       # authorized chars : ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=
-      imagePatterns: new RegExp(/url\([\'\"]?[a-zA-Z0-9\-\/_.:]+\.(woff|woff2|eot|ttf|otf|jpg|jpeg|png|bmp|gif|svg)\??\#?[a-zA-Z0-9\-\/_]*[\'\"]?\)/g)
-      paramettersPattern: new RegExp(/(\?|\&)([^=\n]+)\=([^&\n]+)/gm)
+      paramettersPattern: /(\?|\&|\#)([^=]?)([^&]*)/gm
+
+      # verbose flag
+      verbose: true
     }
     # Map of assets
     @map = {}
@@ -73,6 +78,7 @@ class Fingerprint
     else
       @_writeManifest()
 
+  # Wana coffee?
   _makeCoffee: (filePath) ->
     fileNewName = filePath
     if @_isFingerprintable()
@@ -88,7 +94,7 @@ class Fingerprint
     # Remove srcBasePath/destBasePath
     fileInput = fileInput.replace @options.srcBasePath, ""
     fileOutput = fileOutput.replace @options.destBasePath, ""
-
+    console.log fileOutput
     # Adding to @map var
     @map[fileInput] = fileOutput
 
@@ -102,49 +108,71 @@ class Fingerprint
 
   # Find dependencied like image, fonts.. Hash them and rewrite files (CSS only for now)
   _findAndReplaceSubAssets: (filePath) ->
-    # read file and match url(**)
+    # Manage subFunction for 'this'
     config = @config
     options = @options
     that = this
 
-    contents = fs.readFileSync(filePath).toString()
-    paths = contents.match(@options.imagePatterns)
-    if paths != null
-      # find file into generatedFiles
-      Object.keys(paths).forEach (key) ->
-        # get path
-        match = paths[key]
-        paths[key] = paths[key].substring(paths[key].lastIndexOf("(")+1,paths[key].lastIndexOf(")")).replace(/\"/g,'').replace(/\'/g,"")
-        finalHash = ''
-        param = paths[key].match(options.paramettersPattern)
-        if param != null
-          Object.keys(param).map (key) ->
-            finalHash += param[key]
-        paths[key] = paths[key].replace(options.paramettersPattern, '')
-        # target exists ?
-        targetPath = unixify(path.join(config.paths.public, paths[key]))
+    # Return content of filePath and match pattern
+    data = @_getDataFilePath(filePath)
+    if data.filePaths != null
+      Object.keys(data.filePaths).forEach (key) ->
+
+        # Save matched string and extract filePath
+        match = new RegExp(that._escapeStringToRegex(data.filePaths[key]), 'g')
+        data.filePaths[key] = that._extractURL(data.filePaths[key])
+
+        # Save Hash from filePath and remove it from filePath
+        finalHash = that._extractHashFromURL(data.filePaths[key])
+        data.filePaths[key] = data.filePaths[key].replace(options.paramettersPattern, '')
+
+        # Target is local and exist?
+        targetPath = unixify(path.join(config.paths.public, data.filePaths[key]))
         if fs.existsSync(that.map[targetPath] || targetPath)
+
+          # Adding to map
           if typeof(that.map[targetPath]) == 'undefined'
-            # rename file
             targetNewName = that._fingerprintFile(targetPath)
             that._addToMap(targetPath, path.join(config.paths.public, targetNewName.substring(config.paths.public.length)))
           else
             targetNewName = that.map[targetPath]
-          match = new RegExp(match.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&"), 'g')
-          # add to map
-          # rename path in css
-          contents = contents.replace(match, "url('" + unixify(targetNewName.substring(config.paths.public.length)) + finalHash + "')")
-      # END find file into generatedFiles
+
+          # Rename unhashed filePath by the hashed new name
+          data.fileContent = data.fileContent.replace(match, "url('" + unixify(targetNewName.substring(config.paths.public.length)) + finalHash + "')")
+        else if options.verbose
+          console.log 'no such file : ' + (that.map[targetPath] || targetPath)
+      # END forEach
 
       modifiedFilePath = filePath
       if @_isFingerprintable()
-        modifiedFilePath = @_fingerprintCompose(filePath, contents)
+        modifiedFilePath = @_fingerprintCompose(filePath, data.fileContent)
 
       # write file to generate
-      fs.writeFileSync(modifiedFilePath, contents, 'utf8')
+      fs.writeFileSync(modifiedFilePath, data.fileContent, 'utf8')
       @_addToMap(filePath, modifiedFilePath)
     else
       @_makeCoffee(filePath)
+
+  _getDataFilePath: (filePath) ->
+    fileContent = fs.readFileSync(filePath).toString()
+    return {fileContent:fileContent, filePaths:fileContent.match(@options.assetsPattern)}
+
+  # Extract paths from filePath
+  _extractHashFromURL: (filePath) ->
+    finalHash = ''
+    param = filePath.match(@options.paramettersPattern)
+    if param != null
+      Object.keys(param).map (key) ->
+        finalHash += param[key]
+    return finalHash
+
+  # Extract URL from url('>url<')
+  _extractURL: (string) ->
+    return string.substring(string.lastIndexOf("(")+1,string.lastIndexOf(")")).replace(/\"/g,'').replace(/\'/g,"")
+
+  # Escape strng for regex
+  _escapeStringToRegex: (string) ->
+    return string.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&")
 
   # IsFingerprintable
   _isFingerprintable: ->
