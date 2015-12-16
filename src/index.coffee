@@ -98,12 +98,12 @@ class Fingerprint
     @map[fileInput] = fileOutput
 
   # Remove path before the public
-  _removePathBeforePublic: (path) ->
-    path = unixify path
-    pathPublicIndex = path.indexOf(unixify(@config.paths.public))
+  _removePathBeforePublic: (pathFile) ->
+    pathFile = unixify(path.normalize(pathFile))
+    pathPublicIndex = pathFile.indexOf(unixify(path.normalize(@config.paths.public))) + path.normalize(@config.paths.public).length + 1
     if (pathPublicIndex != 0)
-      path = path.substring(pathPublicIndex)
-    return path
+      pathFile = pathFile.substring(pathPublicIndex)
+    return pathFile
 
   # Find dependencied like image, fonts.. Hash them and rewrite files (CSS only for now)
   _findAndReplaceSubAssets: (filePath) ->
@@ -126,18 +126,36 @@ class Fingerprint
         data.filePaths[key] = data.filePaths[key].replace(options.paramettersPattern, '')
 
         # Target is local and exist?
-        targetPath = unixify(path.join(config.paths.public, data.filePaths[key]))
-        if fs.existsSync(that.map[targetPath] || targetPath)
+        targetPath = data.filePaths[key]
 
+        # regularisation of relative path
+        if typeof(that.map[targetPath]) == 'undefined'
+          targetPath = path.normalize targetPath
+          if targetPath.indexOf('..') == 0
+            targetPath = unixify(path.join(config.paths.public, targetPath.substring(2)))
+        else
+          that.map[targetPath] = path.normalize that.map[targetPath]
+          if that.map[targetPath].indexOf('..') == 0
+            that.map[targetPath] = unixify(path.join(config.paths.public, that.map[targetPath].substring(2)))
+
+        targetPath = unixify(path.normalize(targetPath))
+
+        # Checking if exists
+        if typeof(that.map[that._removePathBeforePublic targetPath]) != 'undefined'
+          filePathToTest = path.join(config.paths.public, that.map[that._removePathBeforePublic targetPath])
+        else
+          filePathToTest = targetPath
+
+        if fs.existsSync(filePathToTest)
           # Adding to map
-          if typeof(that.map[targetPath]) == 'undefined'
+          if typeof(that.map[that._removePathBeforePublic targetPath]) == 'undefined'
             targetNewName = that._fingerprintFile(targetPath)
-            that._addToMap(targetPath, path.join(config.paths.public, targetNewName.substring(config.paths.public.length)))
+            that._addToMap(targetPath, path.join(config.paths.public, targetNewName.substring(path.normalize(config.paths.public).length)))
           else
-            targetNewName = that.map[targetPath]
+            targetNewName = that.map[that._removePathBeforePublic targetPath]
 
           # Rename unhashed filePath by the hashed new name
-          data.fileContent = data.fileContent.replace(match, "url('" + unixify(targetNewName.substring(config.paths.public.length)) + finalHash + "')")
+          data.fileContent = data.fileContent.replace(match, "url('" + unixify(targetNewName.substring(path.normalize(config.paths.public).length)) + finalHash + "')")
         else if options.verbose
           console.log 'no such file : ' + (that.map[targetPath] || targetPath)
       # END forEach
@@ -151,6 +169,7 @@ class Fingerprint
       @_addToMap(filePath, modifiedFilePath)
     else
       @_makeCoffee(filePath)
+
 
   _getAssetsInner: (filePath) ->
     fileContent = fs.readFileSync(filePath).toString()
