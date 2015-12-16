@@ -11,7 +11,8 @@ Fingerprint.logger = {
 
 
 ASSETS =
-  'css/sample.css': 'css/sample-405c39f7.css'
+  'css/sample.css': 'css/sample-c7d1cfa4.css'
+  #'css/sample.css': 'css/sample-405c39f7.css' if autoReplace active
   'js/sample.js': 'js/sample-5d19fc29.js'
   'img/troll.png': 'img/troll-5f2d5cbe.png'
   'fonts/font.eot': 'fonts/font-45d860a3.eot'
@@ -20,7 +21,8 @@ ASSETS =
   'fonts/font.svg': 'fonts/font-52343d4f.svg'
 
 MAP =
-  'public/css/sample.css': 'public/css/sample-405c39f7.css'
+  'public/css/sample.css': 'public/css/sample-c7d1cfa4.css'
+  #'public/css/sample.css': 'public/css/sample-405c39f7.css' if autoReplace active
   'public/js/sample.js': 'public/js/sample-5d19fc29.js'
   'public/img/troll.png': 'public/img/troll-5f2d5cbe.png'
   'public/fonts/font.eot': 'public/fonts/font-45d860a3.eot'
@@ -43,7 +45,7 @@ fingerprintFileExists = (filename) ->
   fs.existsSync(pathFile)
 
 setupFakeFileSystem = ->
-  fse.removeSync path.join(__dirname, 'public')
+  #fse.removeSync path.join(__dirname, 'public')
   fse.copySync path.join(__dirname, 'fixtures'), path.join(__dirname, 'public')
 
 
@@ -63,7 +65,7 @@ describe 'Fingerprint', ->
 
   # executed after each test
   after ->
-    fse.removeSync path.join(__dirname, 'public')
+    #fse.removeSync path.join(__dirname, 'public')
 
   describe 'General testing', ->
     it 'is an instance of Fingerprint', ->
@@ -106,51 +108,52 @@ describe 'Fingerprint', ->
       expect(fingerprintFileExists('js/sample.js')).to.be.true
 
   # Manifest
-  describe 'Write Manifest', ->
-    beforeEach ->
-      setupFakeFileSystem()
-
-    it 'as new one', ->
-      fingerprint._writeManifest(MAP)
-      exists = fs.existsSync(fingerprint.options.manifest)
-      expect(exists).to.be.true
-
-    it 'merging an already existing one', ->
-      fingerprint._writeManifest(MAP)
-      fingerprint._mergeManifest(ASSETS)
-      exists = fs.existsSync(fingerprint.options.manifest)
-      expect(exists).to.be.true
-
-  # Environment detection
-  describe 'Environment detection', ->
-    beforeEach ->
-      setupFakeFileSystem()
-
-    it 'does not run in non-production environment', ->
-      fingerprint.config.env = []
-      fingerprint.onCompile(GENERATED_FILES)
-      expect(fingerprintFileExists('js/sample.js')).to.be.false
-
-    it 'does run with alwaysRun flag set', ->
-      fingerprint.options.alwaysRun = true
-      fingerprint.onCompile(GENERATED_FILES)
-      expect(fingerprintFileExists('js/sample.js')).to.be.true
-
-    it 'does run in production environment', ->
-      fingerprint.options.env = ['production']
-      fingerprint.onCompile(GENERATED_FILES)
-      expect(fingerprintFileExists('js/sample.js')).to.be.true
-
-  # Matching assets to hash
-  describe 'Matching assets to hash', ->
-    describe 'css files', ->
-      # fonts => pattern font file
-        # localiser le fichier css
-        # localiser physiquement les fichiers sources concernés
-          # app/assets => copié sans modification => écriture du fichier avec fsNode
-          # app/fonts => copié via assetsmanager
-        # renomer les fichiers physiquement
-        # renomer les fichiers dans la css
-      # img => pattern image file
-    describe 'js files', ->
-      # img pattern image file
+#  describe 'Write Manifest', ->
+#    beforeEach ->
+#      setupFakeFileSystem()
+#
+#    it 'as new one', ->
+#      fingerprint._writeManifest(MAP)
+#      exists = fs.existsSync(fingerprint.options.manifest)
+#      expect(exists).to.be.true
+#
+#    it 'merging an already existing one', ->
+#      fingerprint._writeManifest(MAP)
+#      fingerprint._mergeManifest(ASSETS)
+#      exists = fs.existsSync(fingerprint.options.manifest)
+#      expect(exists).to.be.true
+#
+#  # Environment detection
+#  describe 'Environment detection', ->
+#    beforeEach ->
+#      setupFakeFileSystem()
+#
+#    it 'does not run in non-production environment', ->
+#      fingerprint.config.env = []
+#      fingerprint.onCompile(GENERATED_FILES)
+#      expect(fingerprintFileExists('js/sample.js')).to.be.false
+#
+#    it 'does run with alwaysRun flag set', ->
+#      fingerprint.options.alwaysRun = true
+#      fingerprint.onCompile(GENERATED_FILES)
+#      expect(fingerprintFileExists('js/sample.js')).to.be.true
+#
+#    it 'does run in production environment', ->
+#      fingerprint.options.env = ['production']
+#      fingerprint.onCompile(GENERATED_FILES)
+#      expect(fingerprintFileExists('js/sample.js')).to.be.true
+#
+#  # Matching assets to hash
+#  describe 'Matching assets to hash', ->
+#    describe 'css files', ->
+#      # fonts => pattern font file
+#        # localiser le fichier css
+#        # localiser physiquement les fichiers sources concernés
+#          # app/assets => copié sans modification => écriture du fichier avec fsNode
+#          # app/fonts => copié via assetsmanager
+#        # renomer les fichiers physiquement
+#        # renomer les fichiers dans la css
+#      # img => pattern image file
+#    describe 'js files', ->
+#      # img pattern image file
+#
