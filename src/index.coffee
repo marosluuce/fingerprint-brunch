@@ -29,13 +29,13 @@ class Fingerprint
       # Environment to make hash on files
       environments: ['production']
       # Force fingerprint-brunch to run in all environments when true.
-      alwaysRun: true
+      alwaysRun: false
       # autoReplaceAndHash assets in css/js
-      autoReplaceAndHash: true
+      autoReplaceAndHash: false
       # Image pattern format
       # authorized chars : ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~:/?#[]@!$&'()*+,;=
       imagePatterns: new RegExp(/url\([\'\"]?[a-zA-Z0-9\-\/_.:]+\.(woff|woff2|eot|ttf|otf|jpg|jpeg|png|bmp|gif|svg)\??\#?[a-zA-Z0-9\-\/_]*[\'\"]?\)/g)
-      paramettersPattern: /(\?|\&)([^=\n]+)\=([^&\n]+)/gm
+      paramettersPattern: new RegExp(/(\?|\&)([^=\n]+)\=([^&\n]+)/gm)
     }
     # Map of assets
     @map = {}
