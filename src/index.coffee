@@ -40,7 +40,7 @@ class Fingerprint
       paramettersPattern: /(\?|\&|\#)([^=]?)([^&]*)/gm
 
       # verbose flag
-      verbose: true
+      verbose: false
     }
     # Map of assets
     @map = {}
@@ -98,12 +98,12 @@ class Fingerprint
     @map[fileInput] = fileOutput
 
   # Remove path before the public
-  _removePathBeforePublic: (path) ->
-    path = unixify path
-    pathPublicIndex = path.indexOf(unixify(@config.paths.public))
+  _removePathBeforePublic: (pathFile) ->
+    pathFile = unixify pathFile
+    pathPublicIndex = pathFile.indexOf(unixify(@config.paths.public))
     if (pathPublicIndex != 0)
-      path = path.substring(pathPublicIndex)
-    return path
+      pathFile = pathFile.substring(pathPublicIndex)
+    return pathFile
 
   # Find dependencied like image, fonts.. Hash them and rewrite files (CSS only for now)
   _findAndReplaceSubAssets: (filePath) ->
@@ -125,8 +125,13 @@ class Fingerprint
         finalHash = that._extractHashFromURL(data.filePaths[key])
         data.filePaths[key] = data.filePaths[key].replace(options.paramettersPattern, '')
 
-        # Target is local and exist?
+        # Relative path with '../' is replaced with '/' for bootstrap font link
+        if data.filePaths[key].indexOf('../') == 0
+          data.filePaths[key] = data.filePaths[key].substring(2)
+
         targetPath = unixify(path.join(config.paths.public, data.filePaths[key]))
+
+        # Target is local and exist?
         if fs.existsSync(that.map[targetPath] || targetPath)
 
           # Adding to map
