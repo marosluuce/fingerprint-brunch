@@ -100,8 +100,8 @@ class Fingerprint
 
   # Remove path before the public
   _removePathBeforePublic: (pathFile) ->
-    pathFile = unixify(path.normalize(pathFile))
-    pathPublicIndex = pathFile.indexOf(unixify(path.normalize(@config.paths.public))) + path.normalize(@config.paths.public).length + 1
+    pathFile = unixify pathFile
+    pathPublicIndex = pathFile.indexOf(unixify(@config.paths.public))
     if (pathPublicIndex != 0)
       pathFile = pathFile.substring(pathPublicIndex)
     return pathFile
@@ -126,8 +126,14 @@ class Fingerprint
         finalHash = that._extractHashFromURL(data.filePaths[key])
         data.filePaths[key] = data.filePaths[key].replace(options.paramettersPattern, '')
 
+        # Relative path with '../' is replaced with '/' for bootstrap font link
+        if data.filePaths[key].indexOf('../') == 0
+          data.filePaths[key] = data.filePaths[key].substring(2)
+
+        targetPath = unixify(path.join(config.paths.public, data.filePaths[key]))
+
         # Target is local and exist?
-        targetPath = data.filePaths[key]
+        if fs.existsSync(that.map[targetPath] || targetPath)
 
         # regularisation of relative path
         if typeof(that.map[targetPath]) == 'undefined'
