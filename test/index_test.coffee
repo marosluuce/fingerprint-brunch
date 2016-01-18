@@ -11,36 +11,36 @@ Fingerprint.logger = {
 
 
 ASSETS =
-  'css/sample.css': 'css/sample-2df77a0c.css'
+  'css/sample.css': 'css/sample-f7705669.css'
   'js/sample.js': 'js/sample-5d19fc29.js'
 
 MAP =
-  'public/css/sample.css': 'public/css/sample-e8f90ad2.css'
+  'public/css/sample.css': 'public/css/sample-24f9b0ba.css'
   'public/js/sample.js': 'public/js/sample-5d19fc29.js'
 
 AUTOREPLACE_ASSETS =
-  'css/sample.css': 'css/sample-e8f90ad2.css'
+  'css/sample.css': 'css/sample-24f9b0ba.css'
   'img/troll.png': 'img/troll-5f2d5cbe.png'
   'fonts/font.eot': 'fonts/font-45d860a3.eot'
   'fonts/font.woff': 'fonts/font-6ced13b9.woff'
   'fonts/font.ttf': 'fonts/font-82c653e7.ttf'
-  'fonts/font.svg': 'fonts/font-f876555b.svg'
+  'fonts/font.svg': 'fonts/font-52343d4f.svg'
   'fonts/font-relative.eot': 'fonts/font-45d860a3.eot'
   'fonts/font-relative.woff': 'fonts/font-6ced13b9.woff'
   'fonts/font-relative.ttf': 'fonts/font-82c653e7.ttf'
-  'fonts/font-relative.svg': 'fonts/font-f876555b.svg'
+  'fonts/font-relative.svg': 'fonts/font-52343d4f.svg'
 
 AUTOREPLACE_MAP =
-  'public/css/sample.css': 'public/css/sample-e8f90ad2.css'
+  'public/css/sample.css': 'public/css/sample-24f9b0ba.css'
   'public/img/troll.png': 'public/img/troll-5f2d5cbe.png'
   'public/fonts/font.eot': 'public/fonts/font-45d860a3.eot'
   'public/fonts/font.woff': 'public/fonts/font-6ced13b9.woff'
   'public/fonts/font.ttf': 'public/fonts/font-82c653e7.ttf'
-  'public/fonts/font.svg': 'public/fonts/font-f876555b.svg'
+  'public/fonts/font.svg': 'public/fonts/font-52343d4f.svg'
   'public/fonts/font-relative.eot': 'public/fonts/font-relative-45d860a3.eot'
   'public/fonts/font-relative.woff': 'public/fonts/font-relative-6ced13b9.woff'
   'public/fonts/font-relative.ttf': 'public/fonts/font-relative-82c653e7.ttf'
-  'public/fonts/font-relative.svg': 'public/fonts/font-relative-f876555b.svg'
+  'public/fonts/font-relative.svg': 'public/fonts/font-relative-52343d4f.svg'
 
 GENERATED_FILES = [
   {path:path.join(__dirname, 'public', 'js', 'sample.js')},
