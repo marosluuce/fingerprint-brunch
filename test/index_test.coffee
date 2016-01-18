@@ -80,6 +80,7 @@ describe 'Fingerprint', ->
         public: path.join('test', 'public')
       plugins:
         fingerprint:
+          publicRootPath: './test/public'
           manifest: './test/public/assets.json'
     )
 
