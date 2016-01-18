@@ -2,6 +2,8 @@
 
 A [Brunch][] plugin witch rename assets with a SHA for fingerprinted it.
 
+Stable version are : [v1.0.11][] and [v1.2.5][]
+
 - [Installation](#installation)
 - [Usage](#usage)
 - [Options](#options)
@@ -173,3 +175,5 @@ The Software is provided “as is”, without warranty of any kind, express or i
 [Brunch]: http://brunch.io
 [travis]: https://travis-ci.org/dlepaux/fingerprint-brunch
 [travis-badge]: https://img.shields.io/travis/dlepaux/fingerprint-brunch.svg?style=flat
+[v1.0.11]: https://github.com/dlepaux/fingerprint-brunch/releases/tag/v1.0.11
+[v1.2.5]: https://github.com/dlepaux/fingerprint-brunch/releases/tag/v1.2.5
