@@ -32,7 +32,9 @@ class Fingerprint
       alwaysRun: false
       # autoReplaceAndHash assets in css/js, like a font linked in an url() in your css
       autoReplaceAndHash: false
-
+      # public root path ( for multi theme support)
+      publicRootPath: '/public'
+      
       # Assets pattern
       assetsPattern: new RegExp(/url\([\'\"]?[a-zA-Z0-9\-\/_.:]+\.(woff|woff2|eot|ttf|otf|jpg|jpeg|png|bmp|gif|svg)\??\#?[a-zA-Z0-9\-\/_]*[\'\"]?\)/g)
       # URL parameters pattern
@@ -100,7 +102,7 @@ class Fingerprint
   # Remove path before the public
   _removePathBeforePublic: (pathFile) ->
     pathFile = unixify pathFile
-    pathPublicIndex = pathFile.indexOf(unixify(@config.paths.public))
+    pathPublicIndex = pathFile.indexOf(unixify(@options.publicRootPath))
     if (pathPublicIndex != 0)
       pathFile = pathFile.substring(pathPublicIndex)
     return pathFile
@@ -129,7 +131,7 @@ class Fingerprint
         if data.filePaths[key].indexOf('../') == 0
           data.filePaths[key] = data.filePaths[key].substring(2)
 
-        targetPath = unixify(path.join(config.paths.public, data.filePaths[key]))
+        targetPath = unixify(path.join(options.publicRootPath, data.filePaths[key]))
 
         # Target is local and exist?
         if fs.existsSync(that.map[targetPath] || targetPath)
@@ -142,7 +144,7 @@ class Fingerprint
             targetNewName = that.map[targetPath]
 
           # Rename unhashed filePath by the hashed new name
-          data.fileContent = data.fileContent.replace(match, "url('" + unixify(targetNewName.substring(config.paths.public.length)) + finalHash + "')")
+          data.fileContent = data.fileContent.replace(match, "url('" + unixify(targetNewName.substring(options.publicRootPath.length)) + finalHash + "')")
         else if options.verbose
           console.log 'no such file : ' + (that.map[targetPath] || targetPath)
       # END forEach

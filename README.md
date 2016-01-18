@@ -115,6 +115,17 @@ Default: `false`
 
 Find assets in your `jointTo` files. It will be finded with `url('path/to/assets.jpg')` in your css (for now)
 
+### publicRootPath
+
+Type: `string`
+Default: `/public`
+
+For support multiple themes, you can set the public root path, exemple :
+
+My config.paths.public is `../../public/theme/theme-1/` in `css` your fonts, images will be linked like that : `/theme/theme-1/img/troll.png`. 
+
+You must set `publicRootPath` with `../../public` to conserve correct link in your css..
+
 ### assetsPatterns
 
 Type: `RegExp Object`
