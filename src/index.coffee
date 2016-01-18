@@ -95,7 +95,6 @@ class Fingerprint
     fileInput = fileInput.replace @options.srcBasePath, ""
     fileOutput = fileOutput.replace @options.destBasePath, ""
     # Adding to @map var
-    console.log fileOutput
     @map[fileInput] = fileOutput
 
   # Remove path before the public
@@ -135,34 +134,15 @@ class Fingerprint
         # Target is local and exist?
         if fs.existsSync(that.map[targetPath] || targetPath)
 
-        # regularisation of relative path
-        if typeof(that.map[targetPath]) == 'undefined'
-          targetPath = path.normalize targetPath
-          if targetPath.indexOf('..') == 0
-            targetPath = unixify(path.join(config.paths.public, targetPath.substring(2)))
-        else
-          that.map[targetPath] = path.normalize that.map[targetPath]
-          if that.map[targetPath].indexOf('..') == 0
-            that.map[targetPath] = unixify(path.join(config.paths.public, that.map[targetPath].substring(2)))
-
-        targetPath = unixify(path.normalize(targetPath))
-
-        # Checking if exists
-        if typeof(that.map[that._removePathBeforePublic targetPath]) != 'undefined'
-          filePathToTest = path.join(config.paths.public, that.map[that._removePathBeforePublic targetPath])
-        else
-          filePathToTest = targetPath
-
-        if fs.existsSync(filePathToTest)
           # Adding to map
-          if typeof(that.map[that._removePathBeforePublic targetPath]) == 'undefined'
+          if typeof(that.map[targetPath]) == 'undefined'
             targetNewName = that._fingerprintFile(targetPath)
-            that._addToMap(targetPath, path.join(config.paths.public, targetNewName.substring(path.normalize(config.paths.public).length)))
+            that._addToMap(targetPath, path.join(config.paths.public, targetNewName.substring(config.paths.public.length)))
           else
-            targetNewName = that.map[that._removePathBeforePublic targetPath]
+            targetNewName = that.map[targetPath]
 
           # Rename unhashed filePath by the hashed new name
-          data.fileContent = data.fileContent.replace(match, "url('" + unixify(targetNewName.substring(path.normalize(config.paths.public).length)) + finalHash + "')")
+          data.fileContent = data.fileContent.replace(match, "url('" + unixify(targetNewName.substring(config.paths.public.length)) + finalHash + "')")
         else if options.verbose
           console.log 'no such file : ' + (that.map[targetPath] || targetPath)
       # END forEach
@@ -176,7 +156,6 @@ class Fingerprint
       @_addToMap(filePath, modifiedFilePath)
     else
       @_makeCoffee(filePath)
-
 
   _getAssetsInner: (filePath) ->
     fileContent = fs.readFileSync(filePath).toString()
