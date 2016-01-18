@@ -96,10 +96,8 @@ class Fingerprint
     # Remove srcBasePath/destBasePath
     fileInput = fileInput.replace @options.srcBasePath, ""
     fileOutput = fileOutput.replace @options.destBasePath, ""
-    console.log fileOutput
     # Adding to @map var
     @map[fileInput] = fileOutput
-    console.log @map
 
   # Remove path before the public
   _removePathBeforePublic: (pathFile) ->
