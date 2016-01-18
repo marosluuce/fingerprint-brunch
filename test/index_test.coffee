@@ -175,7 +175,7 @@ describe 'Fingerprint', ->
 
     it 'add data to @map', ->
       fingerprint._addToMap(path.join(fingerprint.options.publicRootPath, 'test/test.js'), path.join(fingerprint.options.publicRootPath, 'test/test-123456.js'))
-      expect(fingerprint.map['test/test.js']).to.be.equal('test/test-123456.js')
+      expect(fingerprint.map[path.join(fingerprint.options.publicRootPath, 'test/test.js')]).to.be.equal(path.join(fingerprint.options.publicRootPath, 'test/test-123456.js'))
 
 
   # Environment detection
