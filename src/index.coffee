@@ -73,6 +73,7 @@ class Fingerprint
         else
           @_makeCoffee(filePath)
 
+    console.log @map
     # Make array for manifest
     if fs.existsSync @options.manifest
       # Merge array to keep not watched files

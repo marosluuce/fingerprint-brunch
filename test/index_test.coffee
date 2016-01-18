@@ -174,7 +174,7 @@ describe 'Fingerprint', ->
       expect(exists).to.be.true
 
     it 'add data to @map', ->
-      fingerprint._addToMap(path.join(fingerprint.config.paths.public, 'test/test.js'), path.join(fingerprint.config.paths.public, 'test/test-123456.js'))
+      fingerprint._addToMap(path.join(fingerprint.options.publicRootPath, 'test/test.js'), path.join(fingerprint.options.publicRootPath, 'test/test-123456.js'))
       expect(fingerprint.map['test/test.js']).to.be.equal('test/test-123456.js')
 
 
