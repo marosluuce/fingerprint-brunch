@@ -34,7 +34,7 @@ class Fingerprint
       autoReplaceAndHash: false
       # public root path ( for multi theme support)
       publicRootPath: '/public'
-      
+
       # Assets pattern
       assetsPattern: new RegExp(/url\([\'\"]?[a-zA-Z0-9\-\/_.:]+\.(woff|woff2|eot|ttf|otf|jpg|jpeg|png|bmp|gif|svg)\??\#?[a-zA-Z0-9\-\/_]*[\'\"]?\)/g)
       # URL parameters pattern
@@ -227,14 +227,16 @@ class Fingerprint
 
   # Write a new manifest
   _writeManifest: ->
-    output = JSON.stringify @map, null, "  "
-    fs.writeFileSync(@options.manifest, output)
+    if @_isFingerprintable()
+      output = JSON.stringify @map, null, "  "
+      fs.writeFileSync(@options.manifest, output)
 
   # Merging existing manifest with new entree
   _mergeManifest: ->
-    manifest = fs.readFileSync @options.manifest, 'utf8'
-    manifest = JSON.parse manifest
-    manifest[k] = @map[k] for k of @map
-    @_writeManifest(manifest)
+    if @_isFingerprintable()
+      manifest = fs.readFileSync @options.manifest, 'utf8'
+      manifest = JSON.parse manifest
+      manifest[k] = @map[k] for k of @map
+      @_writeManifest(manifest)
 
 module.exports = Fingerprint
