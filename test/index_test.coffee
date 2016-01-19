@@ -183,21 +183,24 @@ describe 'Fingerprint', ->
     beforeEach ->
       setupFakeFileSystem()
 
+    didRun = ->
+      fingerprintFileExists('js/sample.js') &&
+        fs.existsSync(fingerprint.options.manifest)
+
     it 'does not run in non-production environment', ->
       fingerprint.config.env = []
       fingerprint.onCompile(GENERATED_FILES)
-      expect(fingerprintFileExists('js/sample.js')).to.be.false
+      expect(didRun()).to.be.false
 
     it 'does run with alwaysRun flag set', ->
       fingerprint.options.alwaysRun = true
       fingerprint.onCompile(GENERATED_FILES)
-      expect(fingerprintFileExists('js/sample.js')).to.be.true
+      expect(didRun()).to.be.true
 
     it 'does run in production environment', ->
       fingerprint.options.env = ['production']
       fingerprint.onCompile(GENERATED_FILES)
-      expect(fingerprintFileExists('js/sample.js')).to.be.true
-
+      expect(didRun()).to.be.true
 
   # Matching assets to hash
   describe 'AutoReplace inner assets', ->
